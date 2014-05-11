@@ -12,17 +12,9 @@ var path = require('path');
 //Mongoose connecting
 //---------------------------------------------
 var mongoose = require('mongoose');
-mongoose.connect("localhost");
+mongoose.connect("mongodb://localhost/codeship");
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
-});
-
-//FAYE
-//---------------------------------------------
-var faye = require('faye');
-var bayeux = new faye.NodeAdapter({
-	mount: "/faye",
-	timeout: 45
 });
 
 var app = express();
@@ -50,11 +42,23 @@ if ('development' == app.get('env')) {
 
 // routes
 //---------------------------------------------
-app.get('/', routes.index);				//TODO Create new instance when they come  (check PaintStream for example)
-//app.get('/:id', routes.instance);		//TODO Go to instance, add them to mongodb (check PaintStream for example)
-//app.get('/message', routes.message);
+app.get('/', routes.index);
+app.get('/:id', routes.instancePath);
+app.get('/message', routes.message);
 app.get('/users', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
+var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+//FAYE
+//---------------------------------------------
+var faye = require('faye');
+var bayeux = new faye.NodeAdapter({
+	mount: "/faye",
+	timeout: 45
+});
+
+bayeux.attach(server);
+var bayeuxEvents = require('./routes/events');
+bayeuxEvents.setup(bayeux);
