@@ -17,6 +17,7 @@ $(document).ready(function(){
 		lineNumbers: true,
 		matchBrackets: true,
 		mode:  "javascript",
-		theme: "monokai"
+		theme: "monokai",
+		autoCloseBrackets : true
 	});
 });
