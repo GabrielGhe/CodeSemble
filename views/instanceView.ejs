@@ -3,7 +3,7 @@
   <head>
     <title><%= title %></title>
     <!-- CSS -->
-    	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap.min.css" />
+      <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap.min.css" />
       <link rel="stylesheet" href="/lib/stylesheets/font-awesome-4.0.0/css/font-awesome.min.css" />
 	    <link rel='stylesheet' href="/lib/stylesheets/codemirror.min.css" />
 	    <link rel='stylesheet' href="/stylesheets/style.css" />
@@ -11,27 +11,19 @@
 	    	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/theme/monokai.min.css" />
 	    <!-- END Themes -->
     <!-- END CSS -->
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.js"></script>
   </head>
-  <body>
+  <body ng-app="MyApp">
 
-  	<!-- Header -->
-  	<header>
-  		<nav>
+    <div id="global" ng-view="">
 
-  		</nav>
-  	</header>
-  	<!-- END Header -->
-
-  	<!-- content -->
-  	<div id="content">
-  		<div id="editor"></div>
-  	</div>
-  	<!-- END content -->
-
+    </div>
+  	
     <!-- Scripts -->
+    <script type="text/javascript" src="/lib/javascripts/angular.min.js"></script>
+    <script type="text/javascript" src="/lib/javascripts/angular-route.min.js"></script>
+    <script type="text/javascript" src="/lib/javascripts/angular-animate.min.js"></script>
+    <script type="text/javascript" src="/lib/javascripts/ui-bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.js"></script>
     <!-- Code Mirror -->
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/addon/fold/foldcode.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/addon/edit/matchbrackets.min.js"></script>

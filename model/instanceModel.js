@@ -9,7 +9,7 @@ var instanceModelSchema = mongoose.Schema({
  * @param  {String} inst_id [id of session]
  */
 instanceModelSchema.statics.removeInstanceIfEmpty = function(inst_id){
-	var good_sess_id = sess_id.substring(1);
+	var good_sess_id = inst_id.substring(1);
 	this.findOne({ _id : good_sess_id}, function(err, obj){
 		if(!err){
 			if(obj && obj.users.length == 0){
@@ -55,7 +55,7 @@ instanceModelSchema.statics.removeSingleUser = function(user_id, inst_id){
 	var good_inst_id = inst_id.substring(1);
 	Model.update({ '_id' : good_inst_id}, {$pull : {users : user_id}}, function(err, model){
 		if(!err){
-			Model.removeSessionIfEmpty(inst_id);
+			Model.removeInstanceIfEmpty(inst_id);
 		} else {
 			console.log(err);
 		}

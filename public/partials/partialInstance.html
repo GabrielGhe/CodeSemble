@@ -1,0 +1,33 @@
+<!-- content -->
+<div id="content">
+	<div class="editor"></div>
+</div>
+<!-- END content -->
+
+<!-- side -->
+<div id="side">
+
+	<!-- tabs -->
+	<div id="side-tabs-container">
+		<input class="file-filter" ng-model="query" />
+		<ul id="side-tabs">
+			<li class="tabs" ng-repeat="file in files | filter:query track by $index">
+				{{file}}
+			</li>
+		</ul>
+	</div>
+	<!-- END tabs -->
+
+	<!-- chat -->
+	<div id="side-chat-container">
+		<ul id="side-chat-messages">
+			<li ng-repeat="comment in comments" class="message" ng-class="comment.type">
+				{{comment.text}}
+			</li>
+		</ul>
+		<input id="side-chat-input"/>
+	</div>
+	<!-- END chat -->
+
+</div>
+<!-- END side -->
