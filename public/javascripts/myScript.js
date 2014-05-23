@@ -12,6 +12,7 @@ MyApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
 
 //Faye factory
 MyApp.factory('Faye', function(){
+	var subscription;
 	var client = new Faye.Client('http://localhost:3000/faye', {
 		timeout : 60
 	});
@@ -22,7 +23,11 @@ MyApp.factory('Faye', function(){
 		},
 
 		subscribe: function(channel, callback) {
-		  client.subscribe(channel, callback);
+		  subscription = client.subscribe(channel, callback);
+		},
+
+		unsubscribe: function(){
+			subscription.cancel();
 		}
 	}
 });
@@ -49,13 +54,17 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($sc
  		$scope.members = [];
  		$scope.events = new EventHandler($scope);
  		$scope.files = ['untitled', 'thingy', 'blah', 'kay'];
- 		$scope.comments = [{clientId: "Bobby", text: "That's my purse, I don't know you", type: 'subscribe'}];
+ 		$scope.comments = [];
 
  		// Listen to data coming from the server via Faye
-		Faye.subscribe('/' + $routeParams.id, function(msg) {
+		Faye.subscribe('/' + $scope.instanceId, function(msg) {
 			var message = JSON.parse(msg);
 			var func = $scope.events[message.type];
 			if(func) func(message);
+		});
+
+		angular.element(window).bind("beforeunload", function(){
+			Faye.unsubscribe();
 		});
  	}
 

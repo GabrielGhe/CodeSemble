@@ -1,7 +1,10 @@
 var mongoose = require('mongoose');
 
 var instanceModelSchema = mongoose.Schema({
-	users : [String]
+	users : [{
+		_id: String,
+		name: String		
+	}]
 });
 
 /**
@@ -37,10 +40,26 @@ instanceModelSchema.statics.createSingleInstance = function(res){
  * @param  {string} inst_id [Id of the session]
  */
 instanceModelSchema.statics.saveSingleUser = function(user_id, inst_id){
+	var Model = this;
+	var good_inst_id = inst_id.substring(1);
+	var user_obj = { _id: user_id, name: "" };
+	Model.findOneAndUpdate({ _id : good_inst_id}, {$push : { users : user_obj }}, function(err, model){
+		if(err) console.log(err);
+	});
+}
+
+/**
+ * Method to set the user's name
+ * @param  {String} user_id [Id of the user]]
+ * @param  {String} inst_id [Id of the session]
+ * @param  {String} name    [name to set]
+ */
+instanceModelSchema.statics.setSingleUserName = function(user_id, inst_id, name){
 	console.log("In Save Single User");
 	var Model = this;
 	var good_inst_id = inst_id.substring(1);
-	Model.findOneAndUpdate({ _id : good_inst_id}, {$push : { users : user_id }}, function(err, model){
+
+	Model.findOneAndUpdate({ _id: good_inst_id, users: { _id: user_id }}, {$set: { 'users.$.name': name }}, function(err, model){
 		if(err) console.log(err);
 	});
 }
@@ -53,8 +72,9 @@ instanceModelSchema.statics.saveSingleUser = function(user_id, inst_id){
 instanceModelSchema.statics.removeSingleUser = function(user_id, inst_id){
 	var Model = this;
 	var good_inst_id = inst_id.substring(1);
-	Model.update({ '_id' : good_inst_id}, {$pull : {users : user_id}}, function(err, model){
+	Model.update({ '_id' : good_inst_id}, {$pull : {users : { _id: user_id } } }, function(err, model){
 		if(!err){
+			//publish model.name has left
 			Model.removeInstanceIfEmpty(inst_id);
 		} else {
 			console.log(err);
@@ -73,7 +93,7 @@ instanceModelSchema.statics.getUsers = function(inst_id, res){
 	Model.findOne({ "_id" : inst_id }, function(err, obj){
 		var users;
 		if(!err && obj){
-			users = obj.users;
+			users = obj.users.map(function(el){ return el.name });
 			res.render('instanceView', { title: 'Codeship', users: users });
 		} else {
 			if(err) console.log(err);

@@ -9,7 +9,12 @@
 
 	<!-- tabs -->
 	<div id="side-tabs-container">
-		<input class="file-filter" ng-model="query" />
+		<!-- input -->
+		<div class="input-prepend file-filter">
+			<span class="add-on"><i class="fa fa-search"></i></span>
+			<input type="text" placeholder="Search files" ng-model="query">
+		</div>
+		<!-- files -->
 		<ul id="side-tabs">
 			<li class="tabs" ng-repeat="file in files | filter:query track by $index">
 				{{file}}
@@ -21,7 +26,7 @@
 	<!-- chat -->
 	<div id="side-chat-container">
 		<ul id="side-chat-messages">
-			<li ng-repeat="comment in comments" class="message" ng-class="comment.type">
+			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type">
 				{{comment.text}}
 			</li>
 		</ul>
