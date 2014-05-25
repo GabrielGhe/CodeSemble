@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var ColorMaker = require('../utils/colorMaker');
 
 var instanceModelSchema = mongoose.Schema({
 	users : [{
@@ -68,16 +69,37 @@ instanceModelSchema.statics.setSingleUserName = function(user_id, inst_id, name)
  * Method to remove a single user
  * @param  {string} user_id [Id of the user]
  * @param  {string} inst_id [Id of the session]
+ * @param  {func} cb [callback]
  */
-instanceModelSchema.statics.removeSingleUser = function(user_id, inst_id){
+instanceModelSchema.statics.removeSingleUser = function(user_id, inst_id, cb){
 	var Model = this;
 	var good_inst_id = inst_id.substring(1);
 	Model.update({ '_id' : good_inst_id}, {$pull : {users : { _id: user_id } } }, function(err, model){
 		if(!err){
 			//publish model.name has left
 			Model.removeInstanceIfEmpty(inst_id);
+			cb(model.user_id);
 		} else {
 			console.log(err);
+		}
+	});
+}
+
+
+/**
+ * Method that returns the instance
+ * @param  {String} inst_id [session id]
+ * @param  {Object} res     [response]
+ */
+instanceModelSchema.statics.getInstance = function(inst_id, res){
+	var Model = this;
+	Model.findOne({ "_id" : inst_id }, function(err, obj){
+		var users;
+		if(!err && obj){
+			res.render('instanceView', { title: 'Codeship' });
+		} else {
+			if(err) console.log(err);
+			if(!obj) res.redirect(301, "/404"); //TODO make a 404
 		}
 	});
 }
@@ -91,14 +113,14 @@ instanceModelSchema.statics.removeSingleUser = function(user_id, inst_id){
 instanceModelSchema.statics.getUsers = function(inst_id, res){
 	var Model = this;
 	Model.findOne({ "_id" : inst_id }, function(err, obj){
-		var users;
+		var users = [];
 		if(!err && obj){
-			users = obj.users.map(function(el){ return el.name });
-			res.render('instanceView', { title: 'Codeship', users: users });
-		} else {
-			if(err) console.log(err);
-			if(!obj) res.redirect(301, "/404"); //TODO make a 404
+			users = obj.users.map(function(el){
+				return ColorMaker.makeRGB(el._id);
+			});
 		}
+		res.write(JSON.stringify(users));
+		res.end();
 	});
 }
 

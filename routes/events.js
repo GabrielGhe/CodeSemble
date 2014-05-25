@@ -1,10 +1,12 @@
 var InstanceModel = require('../model/instanceModel');
+var ColorMaker = require('../utils/colorMaker');
 
 /**
  * Setting up the bayeux events
  */
 exports.setup = function(bay){
 	var bayeux = bay;
+
 
 	/**
 	 * The subscribe event
@@ -16,7 +18,7 @@ exports.setup = function(bay){
 		InstanceModel.saveSingleUser(clientId, channel);
 		var obj = {
 			type: "subscribe",
-			clientId : clientId
+			color: ColorMaker.makeRGB(clientId)
 		};
 		bayeux.getClient().publish(channel, JSON.stringify(obj), function(err){
 			console.log( "Error ",err );
@@ -30,13 +32,16 @@ exports.setup = function(bay){
 	bayeux.on('unsubscribe', function(clientId, channel) {
 		console.log('[UNSUBSCRIBE] ' + clientId + ' -> ' + channel);
 		//delete from mongo and send new message that user has unsubscribed
-		InstanceModel.removeSingleUser(clientId, channel);
-		var obj = {
-			type: "unsubscribe",
-			clientId : clientId
-		};
-		bayeux.getClient().publish(channel, JSON.stringify(obj), function(err){
-			console.log( "Error ",err );
+		InstanceModel.removeSingleUser(clientId, channel, function(){
+			
+			var obj = {
+				type: "unsubscribe",
+				color: ColorMaker.makeRGB(clientId)
+			};
+
+			bayeux.getClient().publish(channel, JSON.stringify(obj), function(err){
+				console.log( "Error ",err );
+			});
 		});
 	});
 

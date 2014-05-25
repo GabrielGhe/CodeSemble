@@ -26,8 +26,8 @@
 	<!-- chat -->
 	<div id="side-chat-container">
 		<ul id="side-chat-messages">
-			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type">
-				{{comment.text}}
+			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" ng-style="comment.color">
+				<span class="userBlock" ng-style="{ backgroundColor: comment.color}"></span> {{comment.text}}
 			</li>
 		</ul>
 		<input id="side-chat-input"/>

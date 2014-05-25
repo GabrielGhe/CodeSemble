@@ -1,5 +1,6 @@
 //http://cdnjs.com/libraries/codemirror
 var MyApp = angular.module('MyApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap']);
+var x;
 
 //Routing Configuration 
 MyApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
@@ -11,7 +12,7 @@ MyApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
 }]);
 
 //Faye factory
-MyApp.factory('Faye', function(){
+MyApp.factory('Faye', ['$log', '$http', function($log, $http){
 	var subscription;
 	var client = new Faye.Client('http://localhost:3000/faye', {
 		timeout : 60
@@ -23,14 +24,21 @@ MyApp.factory('Faye', function(){
 		},
 
 		subscribe: function(channel, callback) {
-		  subscription = client.subscribe(channel, callback);
+			subscription = client.subscribe(channel, callback);
 		},
 
 		unsubscribe: function(){
 			subscription.cancel();
+		},
+
+		getUsers: function(id, cb){
+			users = [];
+			$http.get("/" + id + "/users").then(function(response) {
+				cb(response.data);
+			});
 		}
 	}
-});
+}]);
 
 
 /* ###############################################################################
@@ -48,16 +56,32 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($sc
 		theme: "monokai",
 		autoCloseBrackets : true
     };
+    x = $scope;
+
+    $scope.DisplayOnlineUsers = function(){
+    	obj = {
+			type:'announcement',
+			text: 'There are (' + $scope.users.length + ') users online'
+		};
+		$scope.AddChatMessage(obj);
+    }
 
  	$scope.Init = function(){
  		$scope.instanceId = $routeParams.id;
- 		$scope.members = [];
+ 		$scope.color = "";
  		$scope.events = new EventHandler($scope);
  		$scope.files = ['untitled', 'thingy', 'blah', 'kay'];
  		$scope.comments = [];
+ 		$scope.users = [];
+ 		Faye.getUsers($scope.instanceId, function(users){
+ 			for(var i=0; i != users.length; ++i){
+ 				$scope.users.push(users[i]);
+ 			}
+ 		});
 
  		// Listen to data coming from the server via Faye
 		Faye.subscribe('/' + $scope.instanceId, function(msg) {
+			// Handle messages
 			var message = JSON.parse(msg);
 			var func = $scope.events[message.type];
 			if(func) func(message);
@@ -68,6 +92,7 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($sc
 		});
  	}
 
+
  	$scope.AddChatMessage = function(obj){
  		$scope.$apply(function() {
 			$scope.comments.push(obj);
@@ -77,16 +102,32 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($sc
  	$scope.Init();
 }]);
 
+//-------------------------------------------
 function EventHandler(scope){
 	var myScope = scope;
+	var firstTime = true;
+
+	this.announcement = function(obj){
+		myScope.AddChatMessage(obj);
+	}
 
 	this.subscribe = function(obj){
-		obj.text = obj.clientId + " has entered the room";
+		if(scope.color == ""){
+			scope.color = obj.color;
+			obj.text = "Welcome";
+		} else {
+			obj.text = "has entered the room";
+		}
 		myScope.AddChatMessage(obj);
+		if(firstTime){
+			firstTime = false;
+			myScope.DisplayOnlineUsers();
+		}
 	};
 
+
 	this.unsubscribe = function(obj){
-		obj.text = obj.clientId + " has left the room";
+		obj.text = " has left the room";
 		myScope.AddChatMessage(obj);
 	};
 }
