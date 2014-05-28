@@ -67,6 +67,7 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($sc
     }
 
  	$scope.Init = function(){
+ 		$scope.leaving = false;
  		$scope.instanceId = $routeParams.id;
  		$scope.color = "";
  		$scope.events = new EventHandler($scope);
@@ -90,6 +91,25 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($sc
 		angular.element(window).bind("beforeunload", function(){
 			Faye.unsubscribe();
 		});
+ 	}
+
+
+ 	$scope.AddUser = function(obj){
+ 		console.log("Adding a user");
+ 		$scope.$apply(function() {
+			$scope.users.push(obj);
+		});
+ 	}
+
+
+ 	$scope.RemoveUser = function(obj){
+ 		console.log("Removing a user");
+ 		var index = $scope.users.indexOf(obj);
+ 		if(index != -1){
+ 			$scope.$apply(function() {
+				$scope.users.splice(index, 1);
+			});
+ 		}
  	}
 
 
@@ -123,11 +143,13 @@ function EventHandler(scope){
 			firstTime = false;
 			myScope.DisplayOnlineUsers();
 		}
+		myScope.AddUser(obj.color);
 	};
 
 
 	this.unsubscribe = function(obj){
 		obj.text = " has left the room";
 		myScope.AddChatMessage(obj);
+		myScope.RemoveUser(obj.color);
 	};
 }

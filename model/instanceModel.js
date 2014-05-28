@@ -16,6 +16,7 @@ instanceModelSchema.statics.removeInstanceIfEmpty = function(inst_id){
 	var good_sess_id = inst_id.substring(1);
 	this.findOne({ _id : good_sess_id}, function(err, obj){
 		if(!err){
+			console.log("In remove instance if empty");
 			if(obj && obj.users.length == 0){
 				obj.remove();
 			}
