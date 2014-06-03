@@ -1,38 +1,53 @@
-<!-- content -->
-<div id="content">
-	<div class="editor"></div>
-</div>
-<!-- END content -->
-
 <!-- side -->
 <div id="side">
 
 	<!-- tabs -->
 	<div id="side-tabs-container">
-		<!-- input -->
+		
 		<div class="input-prepend file-filter">
 			<span class="add-on"><i class="fa fa-search"></i></span>
-			<input type="text" placeholder="Search files" ng-model="query">
+			<input id="fileFilter" type="text" placeholder="Search files" ng-model="query">
 		</div>
-		<!-- files -->
+		
 		<ul id="side-tabs">
 			<li class="tabs" ng-repeat="file in files | filter:query track by $index">
-				{{file}}
+				<span ng-bind-html="to_trusted(file)"></span>
 			</li>
 		</ul>
 	</div>
 	<!-- END tabs -->
 
 	<!-- chat -->
-	<div id="side-chat-container">
+	<!-- <div id="side-chat-container">
 		<ul id="side-chat-messages">
-			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" ng-style="comment.color">
-				<span class="userBlock" ng-style="{ backgroundColor: comment.color}"></span> {{comment.text}}
+			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" 
+			ng-switch on="comment.category" ng-style="comment.color">
+
+				<div ng-switch-when="showUsers">
+					There are (<span ng-bind-html="to_trusted(comment.text)">?</span>) users online
+				</div>
+
+				<div ng-switch-default>
+					<span class="userBlock" ng-style="{ backgroundColor: comment.color}" ></span>
+					<span ng-bind-html="to_trusted(comment.text)">?</span>
+				</div>
+
 			</li>
 		</ul>
 		<input id="side-chat-input"/>
-	</div>
+	</div> -->
 	<!-- END chat -->
 
 </div>
-<!-- END side -->
+<!-- END side
+
+<!-- content -->
+<div id="content">
+	<div class="editor"></div>
+
+	<!-- Icons -->
+	<i id="filesIcon" class="fa fa-user fa-border fa-2x fa-fw fa-inverse"></i>
+	<i id="usersIcon" class="fa fa-file fa-border fa-2x fa-fw fa-inverse"></i>
+	<i id="commentsIcon" class="fa fa-comment fa-border fa-2x fa-fw fa-inverse"></i>
+</div>
+<!-- END content -->

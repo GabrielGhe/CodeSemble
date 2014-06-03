@@ -46,7 +46,7 @@ MyApp.factory('Faye', ['$log', '$http', function($log, $http){
  * ##							InstanceCRTL
  * ##
  * ############################################################################### */
-MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($scope, $routeParams, Faye){
+MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', '$sce', function($scope, $routeParams, Faye, $sce){
 
 	$scope.editorOptions = {
         value: "\n\n\n",
@@ -55,13 +55,17 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($sc
 		mode:  "javascript",
 		theme: "monokai",
 		autoCloseBrackets : true
-    };
-    x = $scope;
+    };//will remove
+
+	$scope.to_trusted = function(html_code) {
+		return $sce.trustAsHtml(html_code);
+	}
 
     $scope.DisplayOnlineUsers = function(){
     	obj = {
+    		category: 'showUsers',
 			type:'announcement',
-			text: 'There are (' + $scope.users.length + ') users online'
+			text: $scope.users.length + ""
 		};
 		$scope.AddChatMessage(obj);
     }
@@ -95,7 +99,6 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($sc
 
 
  	$scope.AddUser = function(obj){
- 		console.log("Adding a user");
  		$scope.$apply(function() {
 			$scope.users.push(obj);
 		});
@@ -103,7 +106,6 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', function($sc
 
 
  	$scope.RemoveUser = function(obj){
- 		console.log("Removing a user");
  		var index = $scope.users.indexOf(obj);
  		if(index != -1){
  			$scope.$apply(function() {
