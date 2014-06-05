@@ -3,8 +3,7 @@ var ColorMaker = require('../utils/colorMaker');
 
 var instanceModelSchema = mongoose.Schema({
 	users : [{
-		_id: String,
-		name: String		
+		_id: String	
 	}]
 });
 
@@ -43,7 +42,7 @@ instanceModelSchema.statics.createSingleInstance = function(res){
 instanceModelSchema.statics.saveSingleUser = function(user_id, inst_id){
 	var Model = this;
 	var good_inst_id = inst_id.substring(1);
-	var user_obj = { _id: user_id, name: "" };
+	var user_obj = { _id: user_id };
 	Model.findOneAndUpdate({ _id : good_inst_id}, {$push : { users : user_obj }}, function(err, model){
 		if(err) console.log(err);
 	});

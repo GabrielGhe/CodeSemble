@@ -70,14 +70,38 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', '$sce', func
 		$scope.AddChatMessage(obj);
     }
 
+    $scope.AddUser = function(obj){
+ 		$scope.$apply(function() {
+			$scope.users.push(obj);
+		});
+ 	}
+
+ 	$scope.RemoveUser = function(obj){
+ 		var index = $scope.users.indexOf(obj);
+ 		if(index != -1){
+ 			$scope.$apply(function() {
+				$scope.users.splice(index, 1);
+			});
+ 		}
+ 	}
+
+ 	$scope.AddChatMessage = function(obj){
+ 		$scope.$apply(function() {
+			$scope.comments.push(obj);
+		});
+ 	}
+
  	$scope.Init = function(){
- 		$scope.leaving = false;
+ 		$scope.chatShow = false;
  		$scope.instanceId = $routeParams.id;
  		$scope.color = "";
  		$scope.events = new EventHandler($scope);
+
  		$scope.files = ['untitled', 'thingy', 'blah', 'kay'];
  		$scope.comments = [];
  		$scope.users = [];
+
+ 		//get users currently in the instance
  		Faye.getUsers($scope.instanceId, function(users){
  			for(var i=0; i != users.length; ++i){
  				$scope.users.push(users[i]);
@@ -92,32 +116,9 @@ MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', '$sce', func
 			if(func) func(message);
 		});
 
+		//if someone leaves page, tell everyone
 		angular.element(window).bind("beforeunload", function(){
 			Faye.unsubscribe();
-		});
- 	}
-
-
- 	$scope.AddUser = function(obj){
- 		$scope.$apply(function() {
-			$scope.users.push(obj);
-		});
- 	}
-
-
- 	$scope.RemoveUser = function(obj){
- 		var index = $scope.users.indexOf(obj);
- 		if(index != -1){
- 			$scope.$apply(function() {
-				$scope.users.splice(index, 1);
-			});
- 		}
- 	}
-
-
- 	$scope.AddChatMessage = function(obj){
- 		$scope.$apply(function() {
-			$scope.comments.push(obj);
 		});
  	}
 

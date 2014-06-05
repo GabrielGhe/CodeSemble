@@ -11,14 +11,29 @@
 		
 		<ul id="side-tabs">
 			<li class="tabs" ng-repeat="file in files | filter:query track by $index">
-				<span ng-bind-html="to_trusted(file)"></span>
+				<i class="fa fa-file"></i> <span ng-bind-html="to_trusted(file)"></span>
 			</li>
 		</ul>
 	</div>
 	<!-- END tabs -->
 
+</div>
+<!-- END side -->
+
+<!-- content -->
+<div id="content">
+	<div class="editor"></div>
+
+	<!-- Open Chat -->
+	<i id="chatOpenIcon" class="fa fa-comment fa-border fa-2x fa-fw fa-inverse" 
+		ng-click="chatShow = !chatShow">
+	</i>
+
 	<!-- chat -->
-	<!-- <div id="side-chat-container">
+	<div id="chat-container" ng-show="chatShow">
+		<!-- Close Chat -->
+		<i id="chatCloseIcon" class="fa fa-times fa-2x" ng-click="chatShow = !chatShow"></i>
+
 		<ul id="side-chat-messages">
 			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" 
 			ng-switch on="comment.category" ng-style="comment.color">
@@ -35,18 +50,8 @@
 			</li>
 		</ul>
 		<input id="side-chat-input"/>
-	</div> -->
+	</div>
 	<!-- END chat -->
 
 </div>
-<!-- END side
-
-<!-- content -->
-<div id="content">
-	<div class="editor"></div>
-
-	<!-- Icons -->
-	<i id="usersIcon" class="fa fa-file fa-border fa-2x fa-fw fa-inverse"></i>
-	<i id="commentsIcon" class="fa fa-comment fa-border fa-2x fa-fw fa-inverse"></i>
-</div>
-<!-- END content -->
+<!-- END content
