@@ -1,6 +1,5 @@
 //http://cdnjs.com/libraries/codemirror
-var MyApp = angular.module('MyApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap']);
-var x;
+var MyApp = angular.module('MyApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ui.codemirror']);
 
 //Routing Configuration 
 MyApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
@@ -10,6 +9,7 @@ MyApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
 
 	$locationProvider.html5Mode(true);
 }]);
+
 
 //Faye factory
 MyApp.factory('Faye', ['$log', '$http', function($log, $http){
@@ -40,22 +40,22 @@ MyApp.factory('Faye', ['$log', '$http', function($log, $http){
 	}
 }]);
 
-
 /* ###############################################################################
  * ##
  * ##							InstanceCRTL
  * ##
  * ############################################################################### */
-MyApp.controller("InstanceCTRL", ["$scope", "$routeParams", 'Faye', '$sce', function($scope, $routeParams, Faye, $sce){
+MyApp.controller("InstanceCTRL", ['$scope', '$routeParams', 'Faye', '$sce', function($scope, $routeParams, Faye, $sce){
 
+	//Codemirror properties
 	$scope.editorOptions = {
-        value: "\n\n\n",
+        value: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
 		lineNumbers: true,
 		matchBrackets: true,
 		mode:  "javascript",
 		theme: "monokai",
 		autoCloseBrackets : true
-    };//will remove
+    };
 
 	$scope.to_trusted = function(html_code) {
 		return $sce.trustAsHtml(html_code);

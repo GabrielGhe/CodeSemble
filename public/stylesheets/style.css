@@ -25,6 +25,13 @@ IDs --------------------------------------------
 	width:100%;
 }
 
+#editor {
+	position:relative;
+	float:left;
+	height:100%;
+	width:100%;
+}
+
 #content {
 	position:relative;
 	float:left;
@@ -134,12 +141,6 @@ IDs --------------------------------------------
 /*
 Classes ---------------------------------------
 */
-.editor {
-	position:relative;
-	float:left;
-	height:100%;
-	width:100%;
-}
 
 .file-filter {
 	position:relative;
