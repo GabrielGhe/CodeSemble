@@ -44,15 +44,19 @@ IDs --------------------------------------------
 
 #chatOpenIcon {
 	position:fixed;
-	bottom:20px;
-	right:20px;
+	bottom:30px;
+	right:30px;
+	color:#272822;
+	background-color:gray;
+	padding:5px;
 	-webkit-transition:all 0.5s;
 	transition:all 0.5s;
 }
 
 #chatOpenIcon:hover {
-	border-color:#2DB82D;
-	color:#2DB82D;
+	-webkit-transform:scale(1.2);
+	-moz-transform:scale(1.2);
+	transform:scale(1.2);
 	cursor:pointer;
 }
 

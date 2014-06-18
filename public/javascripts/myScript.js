@@ -40,22 +40,41 @@ MyApp.factory('Faye', ['$log', '$http', function($log, $http){
 	}
 }]);
 
+MyApp.constant("Language", {
+	javascript: "javascript",
+	html: "html",
+	go: "go",
+	sql: "sql",
+	php: "php",
+	python: "python",
+	ruby: "ruby",
+	shell: "shell"
+});
+
 /* ###############################################################################
  * ##
  * ##							InstanceCRTL
  * ##
  * ############################################################################### */
-MyApp.controller("InstanceCTRL", ['$scope', '$routeParams', 'Faye', '$sce', function($scope, $routeParams, Faye, $sce){
+MyApp.controller("InstanceCTRL", [
+	'$scope','$routeParams', 'Faye', '$sce', 'Language', function($scope, $routeParams, Faye, $sce, Language){
 
 	//Codemirror properties
 	$scope.editorOptions = {
-        value: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+        value: "\n",
 		lineNumbers: true,
 		matchBrackets: true,
 		mode:  "javascript",
 		theme: "monokai",
 		autoCloseBrackets : true
     };
+
+    $scope.ChangeLanguage = function(lang){
+    	var newLang = Language[lang];
+    	if(newLang){
+    		$scope.editorOptions.mode = newLang;
+    	}
+    }
 
 	$scope.to_trusted = function(html_code) {
 		return $sce.trustAsHtml(html_code);
@@ -124,6 +143,31 @@ MyApp.controller("InstanceCTRL", ['$scope', '$routeParams', 'Faye', '$sce', func
 
  	$scope.Init();
 }]);
+
+
+/* ###############################################################################
+ * ##
+ * ##							ModalCtrl
+ * ##
+ * ############################################################################### */
+MyApp.controller("ModalCtrl", ['$scope', '$modalInstance', 'files', function($scope, $modalInstance, files) {
+
+	$scope.files = files;
+	$scope.selected = {
+		file: $scope.files[0]
+	};
+
+	$scope.ok = function () {
+		$modalInstance.close($scope.selected.file);
+	};
+
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
+
+}]);
+
+
 
 //-------------------------------------------
 function EventHandler(scope){
