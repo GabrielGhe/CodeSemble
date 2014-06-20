@@ -4,8 +4,8 @@
 	<!-- tabs -->
 	<div id="side-tabs-container">
 		
-		<div class="input-prepend file-filter">
-			<span class="add-on"><i class="fa fa-search"></i></span>
+		<div class="file-filter">
+			<i class="fa fa-search cs-search-icon"></i>
 			<input id="fileFilter" type="text" placeholder="Search files" ng-model="query">
 		</div>
 		
@@ -17,22 +17,8 @@
 	</div>
 	<!-- END tabs -->
 
-</div>
-<!-- END side -->
-
-<!-- content -->
-<div id="content">
-	<div id="editor" ui-codemirror="editorOptions"></div>
-
-	<!-- Open chat -->
-	<i id="chatOpenIcon" class="fa fa-comment fa-2x fa-fw fa-inverse" 
-		ng-click="chatShow = !chatShow">
-	</i>
-
 	<!-- chat -->
-	<div id="chat-container" ng-show="chatShow">
-		<!-- Close Chat -->
-		<i id="chatCloseIcon" class="fa fa-times fa-2x" ng-click="chatShow = !chatShow"></i>
+	<div id="chat-container">
 
 		<ul id="side-chat-messages">
 			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" 
@@ -53,5 +39,11 @@
 	</div>
 	<!-- END chat -->
 
+</div>
+<!-- END side -->
+
+<!-- content -->
+<div id="content">
+	<div id="editor" ui-codemirror="editorOptions"></div>
 </div>
 <!-- END content -->
