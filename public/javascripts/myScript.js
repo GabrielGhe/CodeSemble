@@ -145,30 +145,6 @@ MyApp.controller("InstanceCTRL", [
 }]);
 
 
-/* ###############################################################################
- * ##
- * ##							ModalCtrl
- * ##
- * ############################################################################### */
-MyApp.controller("ModalCtrl", ['$scope', '$modalInstance', 'files', function($scope, $modalInstance, files) {
-
-	$scope.files = files;
-	$scope.selected = {
-		file: $scope.files[0]
-	};
-
-	$scope.ok = function () {
-		$modalInstance.close($scope.selected.file);
-	};
-
-	$scope.cancel = function () {
-		$modalInstance.dismiss('cancel');
-	};
-
-}]);
-
-
-
 //-------------------------------------------
 function EventHandler(scope){
 	var myScope = scope;
@@ -188,7 +164,6 @@ function EventHandler(scope){
 		myScope.AddChatMessage(obj);
 		if(firstTime){
 			firstTime = false;
-			myScope.DisplayOnlineUsers();
 		}
 		myScope.AddUser(obj.color);
 	};

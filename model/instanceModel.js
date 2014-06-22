@@ -98,7 +98,7 @@ instanceModelSchema.statics.getInstance = function(inst_id, res){
 			res.render('instanceView', { title: 'Codeship' });
 		} else {
 			if(err) console.log(err);
-			if(!obj) res.redirect(301, "/404"); //TODO make a 404
+			if(!obj) res.redirect(301, "/"); //TODO make a 404
 		}
 	});
 }

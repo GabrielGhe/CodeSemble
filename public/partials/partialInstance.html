@@ -11,7 +11,7 @@
 		
 		<ul id="side-tabs">
 			<li class="tabs" ng-repeat="file in files | filter:query track by $index">
-				<i class="fa fa-file"></i> <span ng-bind-html="to_trusted(file)"></span>
+				<i class="fa fa-file-o"></i> <span ng-bind-html="to_trusted(file)"></span>
 			</li>
 		</ul>
 	</div>
@@ -19,6 +19,8 @@
 
 	<!-- chat -->
 	<div id="chat-container">
+
+		<i class="fa fa-user user-icon"></i>
 
 		<ul id="side-chat-messages">
 			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" 
