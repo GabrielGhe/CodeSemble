@@ -20,11 +20,12 @@ MyApp.factory('Faye', ['$log', '$http', function($log, $http){
 
 	return {
 		publish: function(channel, message) {
-		  client.publish(channel, message);
+			client.publish(channel, message);
 		},
 
 		subscribe: function(channel, callback) {
 			subscription = client.subscribe(channel, callback);
+			return subscription;
 		},
 
 		unsubscribe: function(){
@@ -57,7 +58,7 @@ MyApp.constant("Language", {
  * ##
  * ############################################################################### */
 MyApp.controller("InstanceCTRL", [
-	'$scope','$routeParams', 'Faye', '$sce', 'Language', function($scope, $routeParams, Faye, $sce, Language){
+	'$scope','$routeParams', 'Faye', '$sce', 'Language', '$modal', function($scope, $routeParams, Faye, $sce, Language, $modal){
 
 	//Codemirror properties
 	$scope.editorOptions = {
@@ -69,45 +70,64 @@ MyApp.controller("InstanceCTRL", [
 		autoCloseBrackets : true
     };
 
+    $scope.open = function () {
+		var modalInstance = $modal.open({
+			templateUrl: 'modal.html',
+			controller: 'ModalCtrl',
+			backdrop: 'static'
+		});
+
+		modalInstance.result.then(function (username) {
+			$scope.name = username;
+			$scope.FayeLoading();
+		});
+    };
+
     $scope.ChangeLanguage = function(lang){
     	var newLang = Language[lang];
     	if(newLang){
     		$scope.editorOptions.mode = newLang;
     	}
-    }
+    };
 
 	$scope.to_trusted = function(html_code) {
 		return $sce.trustAsHtml(html_code);
-	}
+	};
 
-    $scope.DisplayOnlineUsers = function(){
-    	obj = {
-    		category: 'showUsers',
-			type:'announcement',
-			text: $scope.users.length + ""
-		};
-		$scope.AddChatMessage(obj);
-    }
+    $scope.Who = function(){
+    	return $scope.users.length;
+    };
 
     $scope.AddUser = function(obj){
  		$scope.$apply(function() {
 			$scope.users.push(obj);
 		});
- 	}
+ 	};
 
- 	$scope.RemoveUser = function(obj){
- 		var index = $scope.users.indexOf(obj);
- 		if(index != -1){
- 			$scope.$apply(function() {
-				$scope.users.splice(index, 1);
-			});
+ 	$scope.RemoveUser = function(obj, cb){
+ 		for(var i=0; i != $scope.users.length; ++i){
+ 			var colorAtI = $scope.users[i].color;
+ 			if(obj == colorAtI){
+ 				var whoLeft = $scope.users.splice(i, 1);
+				cb(whoLeft[0]);
+				break;
+ 			}
  		}
- 	}
+ 	};
 
  	$scope.AddChatMessage = function(obj){
  		$scope.$apply(function() {
 			$scope.comments.push(obj);
 		});
+ 	};
+
+ 	$scope.PostSubscribe = function(){
+ 		var obj = {
+ 			type: "postsubscribe",
+			name: $scope.name,
+			color: $scope.color
+ 		};
+ 		Faye.publish('/' + $scope.instanceId, JSON.stringify(obj));
  	}
 
  	$scope.Init = function(){
@@ -116,10 +136,13 @@ MyApp.controller("InstanceCTRL", [
  		$scope.color = "";
  		$scope.events = new EventHandler($scope);
 
+ 		$scope.name = "";
  		$scope.files = ['untitled', 'thingy', 'blah', 'kay'];
  		$scope.comments = [];
  		$scope.users = [];
+ 	};
 
+ 	$scope.FayeLoading = function(){
  		//get users currently in the instance
  		Faye.getUsers($scope.instanceId, function(users){
  			for(var i=0; i != users.length; ++i){
@@ -142,36 +165,40 @@ MyApp.controller("InstanceCTRL", [
  	}
 
  	$scope.Init();
+ 	$scope.open();
 }]);
 
+MyApp.controller("ModalCtrl", ['$scope', '$modalInstance', function($scope, $modalInstance){
+	$scope.ok = function (username) {
+		$modalInstance.close(username);
+	}
+}]);
 
 //-------------------------------------------
 function EventHandler(scope){
 	var myScope = scope;
 	var firstTime = true;
 
-	this.announcement = function(obj){
+	this.postsubscribe = function(obj){
+		obj.text = (firstTime)? "Welcome " + scope.name : obj.name + " has entered the room";
+		firstTime = false;
 		myScope.AddChatMessage(obj);
-	}
+		myScope.AddUser({ name:obj.name, color:obj.color});
+	};
 
 	this.subscribe = function(obj){
 		if(scope.color == ""){
 			scope.color = obj.color;
-			obj.text = "Welcome";
-		} else {
-			obj.text = "has entered the room";
+			scope.PostSubscribe();
 		}
-		myScope.AddChatMessage(obj);
-		if(firstTime){
-			firstTime = false;
-		}
-		myScope.AddUser(obj.color);
 	};
 
 
 	this.unsubscribe = function(obj){
-		obj.text = " has left the room";
-		myScope.AddChatMessage(obj);
-		myScope.RemoveUser(obj.color);
+		myScope.RemoveUser(obj.color, function(whoLeft){
+			var name = (whoLeft.name) || "User";
+			obj.text = name + " has left the room";
+			myScope.AddChatMessage(obj);
+		});
 	};
 }

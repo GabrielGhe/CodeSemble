@@ -60,13 +60,7 @@ IDs --------------------------------------------
 
 #fileFilter {
 	width:100%;
-	width: -webkit-calc(100% - 40px);
-	width: -moz-calc(100% - 40px);
-	width: -o-calc(100% - 40px);
-	width: calc(100% - 40px);
-	border-radius:10px;
-	margin:3px;
-	padding-left:30px;
+	padding:3px 5px;
 }
 
 #side-tabs {
@@ -152,11 +146,6 @@ Classes ---------------------------------------
 	color:#b94a48;
 }
 
-.announcement {
-	font-size:85%;
-	color:black;
-}
-
 .active {
 	color:#2DB82D;
 }
@@ -183,3 +172,10 @@ Classes ---------------------------------------
 	border-radius:50%;
 }
 
+.modal-header {
+	text-align:center;
+}
+
+.input-group-addon {
+	background-color:white;
+}

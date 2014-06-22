@@ -3,10 +3,12 @@
 
 	<!-- tabs -->
 	<div id="side-tabs-container">
-		
-		<div class="file-filter">
-			<i class="fa fa-search cs-search-icon"></i>
-			<input id="fileFilter" type="text" placeholder="Search files" ng-model="query">
+
+		<div id="fileFilter">
+			<div class="input-group">
+				<input ng-model="query" type="text" class="form-control" placeholder="Search">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+			</div>
 		</div>
 		
 		<ul id="side-tabs">
@@ -16,19 +18,14 @@
 		</ul>
 	</div>
 	<!-- END tabs -->
-
 	<!-- chat -->
 	<div id="chat-container">
 
-		<i class="fa fa-user user-icon"></i>
+		<i class="fa fa-user user-icon" popover="{{Who()}} user(s) are online" popover-placement="left" popover-trigger="mouseenter"></i>
 
 		<ul id="side-chat-messages">
 			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" 
 			ng-switch on="comment.category" ng-style="comment.color">
-
-				<div ng-switch-when="showUsers">
-					There are (<span ng-bind-html="to_trusted(comment.text)">?</span>) users online
-				</div>
 
 				<div ng-switch-default>
 					<span class="userBlock" ng-style="{ backgroundColor: comment.color}" ></span>
@@ -49,3 +46,22 @@
 	<div id="editor" ui-codemirror="editorOptions"></div>
 </div>
 <!-- END content -->
+
+<!-- Modal -->
+<script type="text/ng-template" id="modal.html">
+	<div class="modal-header">
+	    <h3>Welcome to CodeShip</h3>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<div class="input-group">
+					<input ng-model="username" placeholder="Enter your name" type="text" class="form-control">
+					<span class="input-group-btn">
+						<button class="btn btn-default" ng-click="ok(username)" type="button">Ok</button>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
