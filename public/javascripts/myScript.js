@@ -70,16 +70,13 @@ MyApp.controller("InstanceCTRL", [
 		autoCloseBrackets : true
     };
 
-    $scope.open = function () {
-		var modalInstance = $modal.open({
-			templateUrl: 'modal.html',
-			controller: 'ModalCtrl',
-			backdrop: 'static'
-		});
+    //Codemirror editor loaded
+    $scope.codemirrorLoaded = function(_editor){
+    	$scope._editor = _editor;
 
-		modalInstance.result.then(function (username) {
-			$scope.name = username;
-			$scope.FayeLoading();
+    	_editor.on("change", function(cm, change) {
+			var func = $scope.sendEvents[change.origin];
+			if(func) func(change);
 		});
     };
 
@@ -134,13 +131,28 @@ MyApp.controller("InstanceCTRL", [
  		$scope.chatShow = false;
  		$scope.instanceId = $routeParams.id;
  		$scope.color = "";
- 		$scope.events = new EventHandler($scope);
+ 		$scope.receiveEvents = new ReceiveEventHandler($scope);
+ 		$scope.sendEvents = new SendEventHandler($scope, Faye);
+
 
  		$scope.name = "";
  		$scope.files = ['untitled', 'thingy', 'blah', 'kay'];
  		$scope.comments = [];
  		$scope.users = [];
  	};
+
+ 	$scope.open = function () {
+		var modalInstance = $modal.open({
+			templateUrl: 'modal.html',
+			controller: 'ModalCtrl',
+			backdrop: 'static'
+		});
+
+		modalInstance.result.then(function (username) {
+			$scope.name = username;
+			$scope.FayeLoading();
+		});
+    };
 
  	$scope.FayeLoading = function(){
  		//get users currently in the instance
@@ -154,7 +166,7 @@ MyApp.controller("InstanceCTRL", [
 		Faye.subscribe('/' + $scope.instanceId, function(msg) {
 			// Handle messages
 			var message = JSON.parse(msg);
-			var func = $scope.events[message.type];
+			var func = $scope.receiveEvents[message.type];
 			if(func) func(message);
 		});
 
@@ -175,9 +187,10 @@ MyApp.controller("ModalCtrl", ['$scope', '$modalInstance', function($scope, $mod
 }]);
 
 //-------------------------------------------
-function EventHandler(scope){
+function ReceiveEventHandler(scope){
 	var myScope = scope;
 	var firstTime = true;
+	var self = this;
 
 	this.postsubscribe = function(obj){
 		obj.text = (firstTime)? "Welcome " + scope.name : obj.name + " has entered the room";
@@ -185,6 +198,7 @@ function EventHandler(scope){
 		myScope.AddChatMessage(obj);
 		myScope.AddUser({ name:obj.name, color:obj.color});
 	};
+
 
 	this.subscribe = function(obj){
 		if(scope.color == ""){
@@ -200,5 +214,121 @@ function EventHandler(scope){
 			obj.text = name + " has left the room";
 			myScope.AddChatMessage(obj);
 		});
+	};
+
+	this.addToEditor = function(obj){
+		if(obj.color !== myScope.color){
+			myScope._editor.replaceRange(obj.text,{
+				line: obj.from.line,
+				ch: obj.from.ch
+			}, {
+				line: obj.to.line,
+				ch: obj.to.ch
+			});
+		}
+	};
+
+	this.deleteFromEditor = function(obj){
+		if(obj.color !== myScope.color){
+			myScope._editor.replaceRange("",{
+				line: obj.from.line,
+				ch: obj.from.ch
+			}, {
+				line: obj.to.line,
+				ch: obj.to.ch
+			});
+		}
+	};
+
+	this["+input"] = function(obj){
+		self.addToEditor(obj);
+	};
+
+	this["+delete"] = function(obj){
+		self.deleteFromEditor(obj);
+	};
+
+	this["paste"] = function(obj){
+		self.addToEditor(obj);
+	};
+
+	this["cut"] = function(obj){
+		self.deleteFromEditor(obj);
+	}
+}
+
+//-------------------------------------------
+function SendEventHandler(scope, Faye){
+	var myScope = scope;
+	var myFaye = Faye;
+
+	this["+input"] = function(change){
+		var obj = {
+			type: "+input",
+			author: myScope.name,
+			color: myScope.color,
+			from: {
+				ch: change.from.ch,
+				line: change.from.line
+			},
+			to: {
+				ch: change.to.ch,
+				line: change.to.line
+			},
+			text: change.text.join("\n")
+		};
+		Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+	};
+
+	this["+delete"] = function(change){
+		var obj = {
+			type: "+delete",
+			author: myScope.name,
+			color: myScope.color,
+			from: {
+				ch: change.from.ch,
+				line: change.from.line
+			},
+			to: {
+				ch: change.to.ch,
+				line: change.to.line
+			}
+		};
+		Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+	};
+
+	this.paste = function(change){
+		var obj = {
+			type: "paste",
+			author: myScope.name,
+			color: myScope.color,
+			from: {
+				ch: change.from.ch,
+				line: change.from.line
+			},
+			to: {
+				ch: change.to.ch,
+				line: change.to.line
+			},
+			text: change.text.join("\n")
+		};
+		Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+	};
+
+	this.cut = function(change){
+		var obj = {
+			type: "cut",
+			author: myScope.name,
+			color: myScope.color,
+			from: {
+				ch: change.from.ch,
+				line: change.from.line
+			},
+			to: {
+				ch: change.to.ch,
+				line: change.to.line
+			}
+		};
+		Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
 	};
 }

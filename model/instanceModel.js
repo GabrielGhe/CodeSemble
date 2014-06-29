@@ -4,7 +4,8 @@ var ColorMaker = require('../utils/colorMaker');
 var instanceModelSchema = mongoose.Schema({
 	users : [{
 		_id: String,
-		name: String
+		name: String,
+		created: Date
 	}]
 });
 
@@ -112,6 +113,18 @@ instanceModelSchema.statics.getUsers = function(inst_id, res){
 		}
 		res.write(JSON.stringify(users));
 		res.end();
+	});
+}
+
+
+/**
+ * Method to update creation time
+ * @param  {String} inst_id [session id]
+ */
+instanceModelSchema.statics.updateDateInstance = function(inst_id){
+	var good_inst_id = inst_id.substring(1);
+	Model.findOneAndUpdate({ '_id' : good_inst_id}, {$set: { 'created': new Date() }}, function(err, model){
+		if(err) console.log(err);
 	});
 }
 
