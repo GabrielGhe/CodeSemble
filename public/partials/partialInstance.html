@@ -1,3 +1,9 @@
+<!-- content -->
+<div id="content">
+	<div id="editor" ui-codemirror="editorOptions"></div>
+</div>
+<!-- END content -->
+
 <!-- side -->
 <div id="side">
 
@@ -6,8 +12,8 @@
 
 		<div id="fileFilter">
 			<div class="input-group">
-				<input ng-model="query" type="text" class="form-control" placeholder="Search">
 				<span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+				<input ng-model="query" type="text" class="form-control" placeholder="Search">
 			</div>
 		</div>
 		
@@ -40,12 +46,6 @@
 
 </div>
 <!-- END side -->
-
-<!-- content -->
-<div id="content">
-	<div id="editor" ui-codemirror="editorOptions"></div>
-</div>
-<!-- END content -->
 
 <!-- Modal -->
 <script type="text/ng-template" id="modal.html">

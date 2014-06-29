@@ -2,7 +2,7 @@ var InstanceModel = require('../model/instanceModel');
 
 //Get Home
 exports.index = function(req, res){
-  InstanceModel.createSingleInstance(res);
+    InstanceModel.createSingleInstance(res);
 };
 
 //GET instance

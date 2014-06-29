@@ -5,9 +5,10 @@
 
 var express = require('express');
 var routes = require('./routes');
-var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var InstanceModel = require('./model/instanceModel');
+InstanceModel.removeAllEmpty();
 
 //Mongoose connecting
 //---------------------------------------------
@@ -56,7 +57,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 var faye = require('faye');
 var bayeux = new faye.NodeAdapter({
 	mount: "/faye",
-	timeout: 45
+	timeout: 10
 });
 
 bayeux.attach(server);
