@@ -5,6 +5,11 @@ exports.index = function(req, res){
     InstanceModel.createSingleInstance(res);
 };
 
+//Get 404
+exports.pageNotFound = function(req, res){
+    res.send(404);
+};
+
 //GET instance
 exports.getInstancePath = function(req, res){
 	InstanceModel.getInstance(req.params.id, res);

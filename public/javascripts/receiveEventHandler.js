@@ -66,4 +66,15 @@ function ReceiveEventHandler(scope){
     this["cut"] = function(obj){
         self.deleteFromEditor(obj);
     }
+
+    this.cursorActivity = function(obj){
+        for(var i=0; i !== myScope.users.length; ++i){
+            if(myScope.users[i].color === obj.color){
+                myScope.$apply(function(){
+                    myScope.users[i].x = obj.x;
+                    myScope.users[i].y = obj.y;
+                });
+            }
+        }
+    };
 }

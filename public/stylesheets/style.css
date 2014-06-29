@@ -179,3 +179,12 @@ Classes ---------------------------------------
 .input-group-addon {
 	background-color:white;
 }
+
+.userCursor {
+	position:absolute;
+	height:15px;
+	width:2px;
+	top:0px;
+	left:0px;
+	background-color:transparent;
+}

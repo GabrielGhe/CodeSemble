@@ -71,4 +71,14 @@ function SendEventHandler(scope, Faye){
         };
         Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
     };
+
+    this.cursorActivity = function(pos){
+        var obj = {
+            type: "cursorActivity",
+            y: pos.top,
+            x: pos.left,
+            color: pos.color
+        };
+        Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+    };
 }

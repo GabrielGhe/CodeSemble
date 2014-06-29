@@ -41,6 +41,34 @@ MyApp.factory('Faye', ['$log', '$http', function($log, $http){
 	}
 }]);
 
+MyApp.filter("notme", function(){
+	return function(input, scope){
+		var newArray = [];
+		for(var i=0; i != input.length; ++i){
+			if(input[i].color !== scope.color){
+				newArray.push(input[i]);
+			}
+		}
+		return newArray;
+	}
+});
+
+MyApp.directive('usercursor', function(){
+	return {
+        restrict:'E',
+        link:function (scope, element, attrs) {
+            element.addClass('userCursor');
+            scope.$watch(attrs.x, function (x) {
+                element.css('left', x + 'px');
+            });
+            scope.$watch(attrs.y, function (y) {
+                element.css('top', y + 'px');
+            });
+        }
+    };
+});
+
+//Codemirror languages
 MyApp.constant("Language", {
 	javascript: "javascript",
 	html: "html",
@@ -77,6 +105,13 @@ MyApp.controller("InstanceCTRL", [
     	_editor.on("change", function(cm, change) {
 			var func = $scope.sendEvents[change.origin];
 			if(func) func(change);
+		});
+
+		_editor.on("cursorActivity", function(cm){
+			var coor = cm.cursorCoords(false);
+			coor["color"] = $scope.color;
+			var func = $scope.sendEvents["cursorActivity"];
+			if(func) func(coor);
 		});
     };
 
@@ -158,7 +193,7 @@ MyApp.controller("InstanceCTRL", [
  		//get users currently in the instance
  		Faye.getUsers($scope.instanceId, function(users){
  			for(var i=0; i != users.length; ++i){
- 				$scope.users.push(users[i]);
+ 				$scope.users.push({ color: users[i] });
  			}
  		});
 

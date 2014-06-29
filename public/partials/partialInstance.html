@@ -1,6 +1,7 @@
 <!-- content -->
 <div id="content">
 	<div id="editor" ui-codemirror="{ onLoad : codemirrorLoaded}" ui-codemirror-opts="editorOptions"></div>
+	<userCursor ng-repeat="user in users | notme:this track by $index" x="user.x" y="user.y" ng-style="{ backgroundColor: user.color }" />
 </div>
 <!-- END content -->
 
