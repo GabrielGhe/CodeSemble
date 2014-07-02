@@ -13,7 +13,7 @@ InstanceModel.removeAllEmpty();
 //Mongoose connecting
 //---------------------------------------------
 var mongoose = require('mongoose');
-mongoose.connect("mongodb://localhost/codeship");
+mongoose.connect("mongodb://localhost/codesemble");
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
 });
