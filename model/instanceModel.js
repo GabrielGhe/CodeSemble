@@ -88,7 +88,7 @@ instanceModelSchema.statics.getInstance = function(inst_id, res){
 	Model.findOne({ "_id" : inst_id }, function(err, obj){
 		var users;
 		if(!err && obj){
-			res.render('instanceView', { title: 'Codeship' });
+			res.render('instanceView', { title: 'CodeSemble' });
 		} else {
 			if(err) console.log(err);
 			if(!obj) res.redirect(301, "/404"); //TODO make a 404
