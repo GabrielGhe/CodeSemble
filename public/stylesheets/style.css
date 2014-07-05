@@ -11,7 +11,6 @@ body {
 li, ul, nav, body, pre, input {
 	margin:0;
 	padding:0;
-	outline:none;
 }
 
 li {
@@ -61,8 +60,19 @@ IDs --------------------------------------------
 }
 
 #fileFilter {
+	position:relative;
 	width:100%;
-	padding:3px 5px;
+}
+
+#fileFilter i {
+	position:absolute;
+	top:14px;
+	left:10px;
+}
+
+#fileFilter input {
+	width:100%;
+	padding-left:30px;
 }
 
 #side-tabs {
@@ -86,17 +96,16 @@ IDs --------------------------------------------
 #side-chat-input {
 	display:block;
 	float:left;
-	height:30px;
 	width: 100%;
-	padding-right:27px;
-	padding-left:5px;
+	padding-left:35px;
+	padding-right:5px;
 }
 
 #side-chat-messages {
 	float:left;
-	height:-webkit-calc(100% - 30px);
-	height:-moz-calc(100% - 30px);
-	height:calc(100% - 30px);
+	height:-webkit-calc(100% - 41px);
+	height:-moz-calc(100% - 41px);
+	height:calc(100% - 41px);
 	width:100%;
 	overflow-y:auto;
 }
@@ -104,21 +113,6 @@ IDs --------------------------------------------
 /*
 Classes ---------------------------------------
 */
-
-.cs-search-icon {
-	position:absolute;
-	top:11px;
-	left:15px;
-}
-
-.file-filter {
-	position:relative;
-	display:block;
-	width:-webkit-calc(100% - 4px);
-	width:-moz-calc(100% - 4px);
-	width:calc(100% - 4px);
-	float:left;
-}
 
 .message {
 	padding: 13px 16px 13px 16px;
@@ -157,8 +151,8 @@ Classes ---------------------------------------
 
 .user-icon {
 	position:absolute;
-	bottom:2px;
-	right:10px;
+	bottom:9px;
+	left:10px;
 }
 
 .user-icon .label {
@@ -191,4 +185,12 @@ Classes ---------------------------------------
 	top:0px;
 	left:0px;
 	background-color:transparent;
+}
+
+.form-control {
+	border-radius:0px !important;
+}
+
+.form-control:focus {
+	border-color:none !important;
 }

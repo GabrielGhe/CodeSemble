@@ -1,3 +1,11 @@
+<!-- content -->
+<div id="content">
+	<div id="editor" ui-codemirror="{ onLoad : codemirrorLoaded}" ui-codemirror-opts="editorOptions"></div>
+	<userCursor ng-repeat="user in users | notme:this track by $index" 
+		x="user.x" y="user.y" ng-style="{ backgroundColor: user.color }" />
+</div>
+<!-- END content -->
+
 <!-- side -->
 <div id="side">
 
@@ -5,10 +13,8 @@
 	<div id="side-tabs-container">
 
 		<div id="fileFilter">
-			<div class="input-group">
-				<span class="input-group-addon"><span class="fa fa-search"></span></span>
-				<input ng-model="query" type="text" class="form-control" placeholder="Search">
-			</div>
+			<i class="fa fa-search"></i>
+			<input ng-model="query" type="text" class="form-control">
 		</div>
 		
 		<ul id="side-tabs">
@@ -37,19 +43,12 @@
 
 			</li>
 		</ul>
-		<input id="side-chat-input"/>
+		<input id="side-chat-input" class="form-control"/>
 	</div>
 	<!-- END chat -->
 
 </div>
 <!-- END side -->
-
-<!-- content -->
-<div id="content">
-	<div id="editor" ui-codemirror="{ onLoad : codemirrorLoaded}" ui-codemirror-opts="editorOptions"></div>
-	<userCursor ng-repeat="user in users | notme:this track by $index" x="user.x" y="user.y" ng-style="{ backgroundColor: user.color }" />
-</div>
-<!-- END content -->
 
 <!-- Modal -->
 <script type="text/ng-template" id="modal.html">
