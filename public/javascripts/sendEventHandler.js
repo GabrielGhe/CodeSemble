@@ -81,4 +81,14 @@ function SendEventHandler(scope, Faye){
         };
         Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
     };
+
+    this.sendMessage = function(text){
+        var obj = {
+            type:"sendMessage",
+            author: myScope.name,
+            color: myScope.color,
+            text: text
+        };
+        Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+    };
 }

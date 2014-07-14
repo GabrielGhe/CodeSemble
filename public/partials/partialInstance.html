@@ -9,12 +9,12 @@
 <!-- side -->
 <div id="side">
 
-	<!-- tabs -->
+	<!-- files -->
 	<div id="side-tabs-container">
 
 		<div id="fileFilter">
 			<i class="fa fa-search"></i>
-			<input ng-model="query" placeholder="Search File" type="text" class="form-control">
+			<input ng-model="query" placeholder="Search {{files.length}} File(s)" type="text" class="form-control">
 		</div>
 		
 		<ul id="side-tabs">
@@ -23,7 +23,7 @@
 			</li>
 		</ul>
 	</div>
-	<!-- END tabs -->
+	<!-- END files -->
 	<!-- chat -->
 	<div id="chat-container">
 
@@ -32,18 +32,27 @@
 			<span class="label label-success">{{Who()}}</span>
 		</div>
 
+		<!-- chat messages -->
 		<ul id="side-chat-messages" scroll-glue>
 			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" 
-			ng-switch on="comment.category" ng-style="comment.color">
+			ng-switch on="comment.type" ng-style="comment.color">
 
 				<div ng-switch-default>
-					<span class="userBlock" ng-style="{ backgroundColor: comment.color}" ></span>
+					<span class="userBlock" ng-style="{ backgroundColor: comment.color}" > </span>
+					<span ng-bind-html="to_trusted(comment.text)">?</span>
+				</div>
+
+				<div ng-switch-when="sendMessage">
+					<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
+					<span><b>{{comment.author}}: </b></span>
 					<span ng-bind-html="to_trusted(comment.text)">?</span>
 				</div>
 
 			</li>
 		</ul>
-		<input id="side-chat-input" placeholder="Send Message" class="form-control"/>
+		<!-- chat input -->
+		<input id="side-chat-input" ng-model="messageText" ng-keyup="MessageEvent($event)" placeholder="Send Message" class="form-control"/>
+
 	</div>
 	<!-- END chat -->
 

@@ -121,6 +121,11 @@ Classes ---------------------------------------
 	padding: 13px 16px 13px 16px;
 }
 
+.message div {
+	width:270px;
+	word-wrap: break-word;
+}
+
 .message:nth-child(odd){
 	background-color:#e0e0e0;
 }

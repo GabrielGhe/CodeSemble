@@ -88,7 +88,10 @@ MyApp.constant("Language", {
 MyApp.controller("InstanceCTRL", [
 	'$scope','$routeParams', 'Faye', '$sce', 'Language', '$modal', function($scope, $routeParams, Faye, $sce, Language, $modal){
 
-	//Codemirror properties
+	
+    /**
+     * Codemirror properties
+     */
 	$scope.editorOptions = {
         value: "\n",
 		lineNumbers: true,
@@ -98,7 +101,9 @@ MyApp.controller("InstanceCTRL", [
 		autoCloseBrackets : true
     };
 
-    //Codemirror editor loaded
+    /**
+     * Codemirror editor loaded
+     */
     $scope.codemirrorLoaded = function(_editor){
     	$scope._editor = _editor;
 
@@ -119,6 +124,9 @@ MyApp.controller("InstanceCTRL", [
         });
     };
 
+    /**
+     * Change programming language in editor
+     */
     $scope.ChangeLanguage = function(lang){
     	var newLang = Language[lang];
     	if(newLang){
@@ -126,20 +134,32 @@ MyApp.controller("InstanceCTRL", [
     	}
     };
 
+    /**
+     * Trusted html code
+     */
 	$scope.to_trusted = function(html_code) {
 		return $sce.trustAsHtml(html_code);
 	};
 
+    /**
+     * How many users
+     */
     $scope.Who = function(){
     	return $scope.users.length;
     };
 
+    /**
+     * User joined event
+     */
     $scope.AddUser = function(obj){
  		$scope.$apply(function() {
 			$scope.users.push(obj);
 		});
  	};
 
+    /**
+     * User left event
+     */
  	$scope.RemoveUser = function(obj, cb){
  		for(var i=0; i != $scope.users.length; ++i){
  			var colorAtI = $scope.users[i].color;
@@ -151,12 +171,33 @@ MyApp.controller("InstanceCTRL", [
  		}
  	};
 
+    /**
+     * Event to send a message
+     * @param {Event} e [keyup event]
+     */
+    $scope.MessageEvent = function(e){
+        var text = $scope.messageText;
+        if(event.keyCode === 13 && text.trim() !== ""){
+            $scope.messageText = "";
+            $scope.sendEvents["sendMessage"](text);
+        }
+    };
+
+    /**
+     * Adds message to chat
+     */
  	$scope.AddChatMessage = function(obj){
  		$scope.$apply(function() {
+            if($scope.comments.length >= 40){
+                $scope.comments.splice(0,1);
+            }
 			$scope.comments.push(obj);
 		});
  	};
 
+    /**
+     * Event that fires right after user on page subscribes
+     */
  	$scope.PostSubscribe = function(){
  		var obj = {
  			type: "postsubscribe",
@@ -166,33 +207,42 @@ MyApp.controller("InstanceCTRL", [
  		Faye.publish('/' + $scope.instanceId, JSON.stringify(obj));
  	}
 
+    /**
+     * Initialization
+     */
  	$scope.Init = function(){
- 		$scope.chatShow = false;
- 		$scope.instanceId = $routeParams.id;
- 		$scope.color = "";
- 		$scope.receiveEvents = new ReceiveEventHandler($scope);
- 		$scope.sendEvents = new SendEventHandler($scope, Faye);
+        //Initialize event handlers
+        $scope.receiveEvents = new ReceiveEventHandler($scope);
+        $scope.sendEvents = new SendEventHandler($scope, Faye);
 
-
+        //Initialize objects
  		$scope.name = "";
+        $scope.instanceId = $routeParams.id;
+        $scope.color = "";
  		$scope.files = ['untitled.js', 'thingy.css', 'blah.java', 'kay.cpp', 'gogo.py', 'haha.html', 'vushky.swift', 'blah.m'];
  		$scope.comments = [];
  		$scope.users = [];
  	};
 
+    /**
+     * Open Modal
+     * @return {[type]} [description]
+     */
  	$scope.open = function () {
 		var modalInstance = $modal.open({
 			templateUrl: 'modal.html',
 			controller: 'ModalCtrl',
 			backdrop: 'static'
 		});
-
 		modalInstance.result.then(function (username) {
 			$scope.name = username;
 			$scope.FayeLoading();
 		});
     };
 
+    /**
+     * Load Faye information
+     */
  	$scope.FayeLoading = function(){
  		//get users currently in the instance
  		Faye.getUsers($scope.instanceId, function(users){
@@ -200,7 +250,6 @@ MyApp.controller("InstanceCTRL", [
  				$scope.users.push({ color: users[i] });
  			}
  		});
-
  		// Listen to data coming from the server via Faye
 		Faye.subscribe('/' + $scope.instanceId, function(msg) {
 			// Handle messages
@@ -208,7 +257,6 @@ MyApp.controller("InstanceCTRL", [
 			var func = $scope.receiveEvents[message.type];
 			if(func) func(message);
 		});
-
 		//if someone leaves page, tell everyone
 		angular.element(window).bind("beforeunload", function(){
 			Faye.unsubscribe();
@@ -225,12 +273,18 @@ MyApp.controller("InstanceCTRL", [
  * ##
  * ############################################################################### */
 MyApp.controller("ModalCtrl", ['$scope', '$modalInstance', function($scope, $modalInstance){
+    /**
+     * Accept name
+     */
 	$scope.ok = function (username) {
         if(username.trim() !== ""){
             $modalInstance.close(username);
         }
 	};
 
+    /**
+     * User pressed enter
+     */
     $scope.enter = function(event, username){
         if(event.keyCode === 13){
             $scope.ok(username);

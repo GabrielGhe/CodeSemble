@@ -51,6 +51,10 @@ function ReceiveEventHandler(scope){
         }
     };
 
+    this.sendMessage = function(obj){
+        myScope.AddChatMessage(obj);
+    };
+
     this["+input"] = function(obj){
         self.addToEditor(obj);
     };
