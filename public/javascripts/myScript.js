@@ -1,5 +1,5 @@
 //http://cdnjs.com/libraries/codemirror
-var MyApp = angular.module('MyApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ui.codemirror']);
+var MyApp = angular.module('MyApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ui.codemirror', 'luegg.directives']);
 
 //Routing Configuration 
 MyApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
@@ -113,6 +113,10 @@ MyApp.controller("InstanceCTRL", [
 			var func = $scope.sendEvents["cursorActivity"];
 			if(func) func(coor);
 		});
+
+        _editor.on("gutterClick", function(cm, n) {
+            var info = cm.lineInfo(n);
+        });
     };
 
     $scope.ChangeLanguage = function(lang){
@@ -171,7 +175,7 @@ MyApp.controller("InstanceCTRL", [
 
 
  		$scope.name = "";
- 		$scope.files = ['untitled', 'thingy', 'blah', 'kay'];
+ 		$scope.files = ['untitled.js', 'thingy.css', 'blah.java', 'kay.cpp', 'gogo.py', 'haha.html', 'vushky.swift', 'blah.m'];
  		$scope.comments = [];
  		$scope.users = [];
  	};
@@ -209,7 +213,7 @@ MyApp.controller("InstanceCTRL", [
 		angular.element(window).bind("beforeunload", function(){
 			Faye.unsubscribe();
 		});
- 	}
+ 	};
 
  	$scope.Init();
  	$scope.open();
@@ -222,6 +226,14 @@ MyApp.controller("InstanceCTRL", [
  * ############################################################################### */
 MyApp.controller("ModalCtrl", ['$scope', '$modalInstance', function($scope, $modalInstance){
 	$scope.ok = function (username) {
-		$modalInstance.close(username);
-	}
+        if(username.trim() !== ""){
+            $modalInstance.close(username);
+        }
+	};
+
+    $scope.enter = function(event, username){
+        if(event.keyCode === 13){
+            $scope.ok(username);
+        }
+    };
 }]);

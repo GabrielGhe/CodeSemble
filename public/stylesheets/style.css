@@ -38,9 +38,9 @@ IDs --------------------------------------------
 	position:relative;
 	float:left;
 	height:100%;
-	width:-webkit-calc(100% - 250px);
-	width:-moz-calc(100% - 250px);
-	width:calc(100% - 250px);
+	width:-webkit-calc(100% - 300px);
+	width:-moz-calc(100% - 300px);
+	width:calc(100% - 300px);
 	background-color:gray;
 }
 
@@ -48,7 +48,7 @@ IDs --------------------------------------------
 	position:relative;
 	float:left;
 	height:100%;
-	width:250px;
+	width:300px;
 	background-color: #F1F1F1;
 }
 
@@ -77,8 +77,11 @@ IDs --------------------------------------------
 
 #side-tabs {
 	float:left;
-	height: 80%;
+	height:-webkit-calc(100% - 42px);
+	height:-moz-calc(100% - 42px);
+	height:calc(100% - 42px);
 	width: 100%;
+	overflow-y:scroll;
 }
 
 #chat-container {
@@ -142,11 +145,12 @@ Classes ---------------------------------------
 
 .tabs {
 	cursor:pointer;
-	margin-left: 8px;
+	border-bottom:1px solid lightgray;
+	padding: 13px 16px 13px 16px;
 }
 
 .tabs:hover {
-	color:blue;
+	background-color:#e0e0e0;
 }
 
 .user-icon {
@@ -193,4 +197,18 @@ Classes ---------------------------------------
 
 .form-control:focus {
 	border-color:none !important;
+}
+
+.modal-content {
+	border-radius:0px;
+}
+
+.CodeMirror-linenumber {
+	cursor:pointer;
+	-webkit-transition:all 0.5s;
+	transition:all 0.5s;
+}
+
+.CodeMirror-linenumber:hover {
+	color:lightgreen !important;
 }

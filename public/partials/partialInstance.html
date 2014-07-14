@@ -14,12 +14,12 @@
 
 		<div id="fileFilter">
 			<i class="fa fa-search"></i>
-			<input ng-model="query" type="text" class="form-control">
+			<input ng-model="query" placeholder="Search File" type="text" class="form-control">
 		</div>
 		
 		<ul id="side-tabs">
 			<li class="tabs" ng-repeat="file in files | filter:query track by $index">
-				<i class="fa fa-file-o"></i> <span ng-bind-html="to_trusted(file)"></span>
+				<i class="fa fa-file-o fa-lg"></i> <span ng-bind-html="to_trusted(file)"></span>
 			</li>
 		</ul>
 	</div>
@@ -32,7 +32,7 @@
 			<span class="label label-success">{{Who()}}</span>
 		</div>
 
-		<ul id="side-chat-messages">
+		<ul id="side-chat-messages" scroll-glue>
 			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" 
 			ng-switch on="comment.category" ng-style="comment.color">
 
@@ -43,7 +43,7 @@
 
 			</li>
 		</ul>
-		<input id="side-chat-input" class="form-control"/>
+		<input id="side-chat-input" placeholder="Send Message" class="form-control"/>
 	</div>
 	<!-- END chat -->
 
@@ -52,14 +52,19 @@
 
 <!-- Modal -->
 <script type="text/ng-template" id="modal.html">
+	<!-- Header -->
 	<div class="modal-header">
 	    <h3>Welcome to CodeSemble</h3>
 	</div>
+	<!-- Body -->
 	<div class="modal-body">
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2">
 				<div class="input-group">
-					<input ng-model="username" placeholder="Enter your name" type="text" class="form-control">
+
+					<input ng-model="username" autoFocus placeholder="Enter your name" type="text"
+						ng-keyup="enter($event, username)" class="form-control">
+
 					<span class="input-group-btn">
 						<button class="btn btn-default" ng-click="ok(username)" type="button">Ok</button>
 					</span>
@@ -67,4 +72,5 @@
 			</div>
 		</div>
 	</div>
+	<!-- End Body -->
 </script>
