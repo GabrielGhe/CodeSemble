@@ -40,7 +40,7 @@ exports.setup = function(bay){
 				color: ColorMaker.makeRGB(clientId)
 			};
 			bayeux.getClient().publish(channel, JSON.stringify(obj), function(err){
-				console.log( "Error ",err );
+				console.log( 'Error ',err );
 			});
 		});
 	});
@@ -55,12 +55,12 @@ exports.setup = function(bay){
 		InstanceModel.removeSingleUser(clientId, channel, function(){
 			
 			var obj = {
-				type: "unsubscribe",
+				type: 'unsubscribe',
 				color: ColorMaker.makeRGB(clientId)
 			};
 
 			bayeux.getClient().publish(channel, JSON.stringify(obj), function(err){
-				console.log( "Error ",err );
+				console.log( 'Error ',err );
 			});
 		});
 	});
