@@ -17,7 +17,7 @@ exports.getInstancePath = function(req, res){
 
 //Faye Message passing
 exports.message = function(req, res){
-	bayeux.getClient().publish("/channel", {text: req.body.message});
+	bayeux.getClient().publish('/channel', {text: req.body.message});
 	res.send(200);
 };
 
