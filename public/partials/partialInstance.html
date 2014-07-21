@@ -48,6 +48,11 @@
 					<span ng-bind-html="to_trusted(comment.text)">?</span>
 				</div>
 
+				<div ng-switch-when="scrollIntoView">
+					<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
+					<span><b>{{comment.author}}: </b></span>
+					<span ng-click="GoToLine(comment.line)" ng-bind-html="to_trusted(comment.text)">?</span>
+				</div>
 			</li>
 		</ul>
 		<!-- chat input -->

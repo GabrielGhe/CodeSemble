@@ -10,6 +10,7 @@
     "express": "3.4.8",
     "ejs": "*",
     "faye": "1.0.1",
-    "mongoose": "~3.8.7"
+    "mongoose": "~3.8.7",
+    "moment": "~2.7.0"
   }
 }

@@ -1,5 +1,6 @@
 var InstanceModel = require('../model/instanceModel');
 var ColorMaker = require('../utils/colorMaker');
+var eventList = ['sendMessage', 'cut', 'paste', '+delete', '+input'];
 
 /**
  * Setting up the bayeux events
@@ -14,6 +15,9 @@ exports.setup = function(bay){
 					var data = JSON.parse(message.data);
 					if(data['type'] === 'postsubscribe'){
 						InstanceModel.setSingleUserName(message.clientId, message.channel, data['name']);
+					}
+					if(eventList.indexOf(data['type']) > -1){
+						InstanceModel.updateDateInstance(message.channel);
 					}
 				}
 			}finally{

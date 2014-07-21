@@ -2,9 +2,19 @@ function SendEventHandler(scope, Faye){
     var myScope = scope;
     var myFaye = Faye;
 
-    this["+input"] = function(change){
+    this.cursorActivity = function(pos){
         var obj = {
-            type: "+input",
+            type: "cursorActivity",
+            y: pos.top,
+            x: pos.left,
+            color: pos.color
+        };
+        Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+    };
+
+    this.cut = function(change){
+        var obj = {
+            type: "cut",
             author: myScope.name,
             color: myScope.color,
             from: {
@@ -14,8 +24,7 @@ function SendEventHandler(scope, Faye){
             to: {
                 ch: change.to.ch,
                 line: change.to.line
-            },
-            text: change.text.join("\n")
+            }
         };
         Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
     };
@@ -33,6 +42,24 @@ function SendEventHandler(scope, Faye){
                 ch: change.to.ch,
                 line: change.to.line
             }
+        };
+        Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+    };
+
+    this["+input"] = function(change){
+        var obj = {
+            type: "+input",
+            author: myScope.name,
+            color: myScope.color,
+            from: {
+                ch: change.from.ch,
+                line: change.from.line
+            },
+            to: {
+                ch: change.to.ch,
+                line: change.to.line
+            },
+            text: change.text.join("\n")
         };
         Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
     };
@@ -55,29 +82,13 @@ function SendEventHandler(scope, Faye){
         Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
     };
 
-    this.cut = function(change){
+    this.scrollIntoView = function(obj){
         var obj = {
-            type: "cut",
+            type:"scrollIntoView",
             author: myScope.name,
             color: myScope.color,
-            from: {
-                ch: change.from.ch,
-                line: change.from.line
-            },
-            to: {
-                ch: change.to.ch,
-                line: change.to.line
-            }
-        };
-        Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
-    };
-
-    this.cursorActivity = function(pos){
-        var obj = {
-            type: "cursorActivity",
-            y: pos.top,
-            x: pos.left,
-            color: pos.color
+            text: "Look at line " + (obj.line + 1),
+            line: obj.line
         };
         Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
     };

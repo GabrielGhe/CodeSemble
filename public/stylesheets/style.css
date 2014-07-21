@@ -42,6 +42,7 @@ IDs --------------------------------------------
 	width:-moz-calc(100% - 300px);
 	width:calc(100% - 300px);
 	background-color:gray;
+	overflow-y:scroll;
 }
 
 #side {
@@ -188,11 +189,8 @@ Classes ---------------------------------------
 }
 
 .userCursor {
-	position:absolute;
 	height:15px;
 	width:2px;
-	top:0px;
-	left:0px;
 	background-color:transparent;
 }
 
@@ -206,6 +204,10 @@ Classes ---------------------------------------
 
 .modal-content {
 	border-radius:0px;
+}
+
+.line-active {
+	background-color:blue;
 }
 
 .CodeMirror-linenumber {

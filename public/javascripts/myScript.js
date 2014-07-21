@@ -41,6 +41,21 @@ MyApp.factory('Faye', ['$log', '$http', function($log, $http){
 	}
 }]);
 
+//Faye factory
+MyApp.factory('CodeMirrorEditor', [function(){
+    var _editor;
+
+    return {
+        setEditor: function(editor) {
+            _editor = editor;
+        },
+
+        getEditor: function() {
+            return _editor;
+        }
+    }
+}]);
+
 MyApp.filter("notme", function(){
 	return function(input, scope){
 		var newArray = [];
@@ -53,11 +68,15 @@ MyApp.filter("notme", function(){
 	}
 });
 
-MyApp.directive('usercursor', function(){
+MyApp.directive('usercursor', ['CodeMirrorEditor', function(CodeMirrorEditor){
+    var editor = CodeMirrorEditor;
+
 	return {
         restrict:'E',
         link:function (scope, element, attrs) {
             element.addClass('userCursor');
+            CodeMirrorEditor.getEditor().addWidget({line: 0, ch:0}, element[0]);
+
             scope.$watch(attrs.x, function (x) {
                 element.css('left', x + 'px');
             });
@@ -66,7 +85,7 @@ MyApp.directive('usercursor', function(){
             });
         }
     };
-});
+}]);
 
 //Codemirror languages
 MyApp.constant("Language", {
@@ -86,7 +105,8 @@ MyApp.constant("Language", {
  * ##
  * ############################################################################### */
 MyApp.controller("InstanceCTRL", [
-	'$scope','$routeParams', 'Faye', '$sce', 'Language', '$modal', function($scope, $routeParams, Faye, $sce, Language, $modal){
+	'$scope','$routeParams', 'Faye', '$sce', 'Language', '$modal', 'CodeMirrorEditor', 
+    function($scope, $routeParams, Faye, $sce, Language, $modal, CodeMirrorEditor){
 
 	
     /**
@@ -105,6 +125,7 @@ MyApp.controller("InstanceCTRL", [
      * Codemirror editor loaded
      */
     $scope.codemirrorLoaded = function(_editor){
+        CodeMirrorEditor.setEditor(_editor);
     	$scope._editor = _editor;
 
     	_editor.on("change", function(cm, change) {
@@ -113,7 +134,7 @@ MyApp.controller("InstanceCTRL", [
 		});
 
 		_editor.on("cursorActivity", function(cm){
-			var coor = cm.cursorCoords(false);
+			var coor = cm.cursorCoords(false, "local");
 			coor["color"] = $scope.color;
 			var func = $scope.sendEvents["cursorActivity"];
 			if(func) func(coor);
@@ -121,6 +142,29 @@ MyApp.controller("InstanceCTRL", [
 
         _editor.on("gutterClick", function(cm, n) {
             var info = cm.lineInfo(n);
+            var func = $scope.sendEvents["scrollIntoView"];
+            if(func) func(info);
+        });
+    };
+
+    /**
+     * User joined event
+     */
+    $scope.AddUser = function(obj){
+        $scope.$apply(function() {
+            $scope.users.push(obj);
+        });
+    };
+
+    /**
+     * Adds message to chat
+     */
+    $scope.AddChatMessage = function(obj){
+        $scope.$apply(function() {
+            if($scope.comments.length >= 40){
+                $scope.comments.splice(0,1);
+            }
+            $scope.comments.push(obj);
         });
     };
 
@@ -132,6 +176,42 @@ MyApp.controller("InstanceCTRL", [
     	if(newLang){
     		$scope.editorOptions.mode = newLang;
     	}
+    };
+
+    /**
+     * Scroll into view line
+     */
+    $scope.GoToLine = function(line){
+        var editor = $scope._editor;
+        editor.scrollIntoView({ line:line, ch:0 });
+        editor.addLineClass(line, 'line-active');
+        editor.removeLineClass(line, 'line-active');
+    };
+
+    /**
+     * Event to send a message
+     * @param {Event} e [keyup event]
+     */
+    $scope.MessageEvent = function(e){
+        var text = $scope.messageText;
+        if(event.keyCode === 13 && text.trim() !== ""){
+            $scope.messageText = "";
+            $scope.sendEvents["sendMessage"](text);
+        }
+    };
+
+    /**
+     * User left event
+     */
+    $scope.RemoveUser = function(obj, cb){
+        for(var i=0; i != $scope.users.length; ++i){
+            var colorAtI = $scope.users[i].color;
+            if(obj == colorAtI){
+                var whoLeft = $scope.users.splice(i, 1);
+                cb(whoLeft[0]);
+                break;
+            }
+        }
     };
 
     /**
@@ -147,53 +227,6 @@ MyApp.controller("InstanceCTRL", [
     $scope.Who = function(){
     	return $scope.users.length;
     };
-
-    /**
-     * User joined event
-     */
-    $scope.AddUser = function(obj){
- 		$scope.$apply(function() {
-			$scope.users.push(obj);
-		});
- 	};
-
-    /**
-     * User left event
-     */
- 	$scope.RemoveUser = function(obj, cb){
- 		for(var i=0; i != $scope.users.length; ++i){
- 			var colorAtI = $scope.users[i].color;
- 			if(obj == colorAtI){
- 				var whoLeft = $scope.users.splice(i, 1);
-				cb(whoLeft[0]);
-				break;
- 			}
- 		}
- 	};
-
-    /**
-     * Event to send a message
-     * @param {Event} e [keyup event]
-     */
-    $scope.MessageEvent = function(e){
-        var text = $scope.messageText;
-        if(event.keyCode === 13 && text.trim() !== ""){
-            $scope.messageText = "";
-            $scope.sendEvents["sendMessage"](text);
-        }
-    };
-
-    /**
-     * Adds message to chat
-     */
- 	$scope.AddChatMessage = function(obj){
- 		$scope.$apply(function() {
-            if($scope.comments.length >= 40){
-                $scope.comments.splice(0,1);
-            }
-			$scope.comments.push(obj);
-		});
- 	};
 
     /**
      * Event that fires right after user on page subscribes
@@ -219,7 +252,7 @@ MyApp.controller("InstanceCTRL", [
  		$scope.name = "";
         $scope.instanceId = $routeParams.id;
         $scope.color = "";
- 		$scope.files = ['untitled.js', 'thingy.css', 'blah.java', 'kay.cpp', 'gogo.py', 'haha.html', 'vushky.swift', 'blah.m'];
+ 		$scope.files = ['untitled.js', 'thingy.css'];
  		$scope.comments = [];
  		$scope.users = [];
  	};
