@@ -13,7 +13,7 @@ InstanceModel.removeAllEmpty();
 //Mongoose connecting
 //---------------------------------------------
 var mongoose = require('mongoose');
-mongoose.connect("mongodb://localhost/codesemble");
+mongoose.connect('mongodb://localhost/codesemble');
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
 });
@@ -57,7 +57,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 //---------------------------------------------
 var faye = require('faye');
 var bayeux = new faye.NodeAdapter({
-	mount: "/faye",
+	mount: '/faye',
 	timeout: 10
 });
 
