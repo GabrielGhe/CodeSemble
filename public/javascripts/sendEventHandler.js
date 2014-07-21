@@ -43,7 +43,7 @@ function SendEventHandler(scope, Faye){
                 line: change.to.line
             }
         };
-        Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+        Faye.publish("/" + myScope.instanceId, JSON.stringify(obj));
     };
 
     this["+input"] = function(change){
@@ -61,7 +61,7 @@ function SendEventHandler(scope, Faye){
             },
             text: change.text.join("\n")
         };
-        Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+        Faye.publish("/" + myScope.instanceId, JSON.stringify(obj));
     };
 
     this.paste = function(change){
@@ -79,7 +79,7 @@ function SendEventHandler(scope, Faye){
             },
             text: change.text.join("\n")
         };
-        Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+        Faye.publish("/" + myScope.instanceId, JSON.stringify(obj));
     };
 
     this.scrollIntoView = function(obj){
@@ -100,6 +100,6 @@ function SendEventHandler(scope, Faye){
             color: myScope.color,
             text: text
         };
-        Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
+        Faye.publish("/" + myScope.instanceId, JSON.stringify(obj));
     };
 }
