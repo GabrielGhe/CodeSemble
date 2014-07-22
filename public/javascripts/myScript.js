@@ -1,3 +1,5 @@
+"use strict";
+
 //http://cdnjs.com/libraries/codemirror
 var MyApp = angular.module('MyApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ui.codemirror', 'luegg.directives']);
 

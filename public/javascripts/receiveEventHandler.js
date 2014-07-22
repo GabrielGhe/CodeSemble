@@ -1,3 +1,5 @@
+"use strict";
+
 function ReceiveEventHandler(scope){
     var myScope = scope;
     var firstTime = true;

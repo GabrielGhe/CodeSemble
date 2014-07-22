@@ -1,3 +1,5 @@
+"use strict";
+
 var mongoose = require('mongoose');
 var ColorMaker = require('../utils/colorMaker');
 var moment = require('moment');
@@ -141,8 +143,6 @@ instanceModelSchema.statics.updateDateInstance = function(inst_id, cb){
 	Model.update({ '_id' : good_inst_id}, {$set: { 'updated': moment().unix() }}, function(err, model){
 		if(err){
 			console.log("Error updating date", err);
-		} else {
-			console.log("New model", model);
 		}
 	});
 }

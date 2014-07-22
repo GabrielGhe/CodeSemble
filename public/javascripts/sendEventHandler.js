@@ -1,3 +1,5 @@
+"use strict";
+
 function SendEventHandler(scope, Faye){
     var myScope = scope;
     var myFaye = Faye;

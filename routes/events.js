@@ -1,3 +1,5 @@
+"use strict";
+
 var InstanceModel = require('../model/instanceModel');
 var ColorMaker = require('../utils/colorMaker');
 var eventList = ['sendMessage', 'cut', 'paste', '+delete', '+input'];
