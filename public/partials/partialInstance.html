@@ -29,7 +29,7 @@
 
 		<div class="user-icon">
 			<i class="fa fa-user fa-lg"></i>
-			<span class="label label-success">{{Who()}}</span>
+			<span class="label label-success">{{who()}}</span>
 		</div>
 
 		<!-- chat messages -->
@@ -44,19 +44,19 @@
 
 				<div ng-switch-when="sendMessage">
 					<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
-					<span ng-bind-html="AuthorCheck(comment.author, comment.color)"></span>:
+					<span><b>{{comment.author}}</b> : </span>
 					<span ng-bind-html="to_trusted(comment.text)">?</span>
 				</div>
 
 				<div ng-switch-when="scrollIntoView">
 					<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
 					<span><b>{{comment.author}}: </b></span>
-					<span ng-click="GoToLine(comment.line)" ng-bind-html="to_trusted(comment.text)">?</span>
+					<span ng-click="goToLine(comment.line)" ng-bind-html="to_trusted(comment.text)">?</span>
 				</div>
 			</li>
 		</ul>
 		<!-- chat input -->
-		<input id="side-chat-input" ng-model="messageText" ng-keyup="MessageEvent($event)" placeholder="Send Message" class="form-control"/>
+		<input id="side-chat-input" ng-model="messageText" ng-keyup="messageEvent($event)" placeholder="Send Message" class="form-control"/>
 
 	</div>
 	<!-- END chat -->

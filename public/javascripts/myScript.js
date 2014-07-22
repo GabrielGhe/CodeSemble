@@ -145,13 +145,13 @@ MyApp.controller("InstanceCTRL", [
     };
 
     //User joined event
-    $scope.AddUser = function(obj){
+    $scope.addUser = function(obj){
         $scope.$apply(function() {
             $scope.users.push(obj);
         });
     };
 
-    $scope.AddChatMessage = function(obj){
+    $scope.addChatMessage = function(obj){
         $scope.$apply(function() {
             if($scope.comments.length >= 40){
                 $scope.comments.splice(0,1);
@@ -160,16 +160,8 @@ MyApp.controller("InstanceCTRL", [
         });
     };
 
-    $scope.AuthorCheck = function(author, color){
-        var toReturn = author;
-        if(color === $scope.color){
-            toReturn = "<b>Me</b>";
-        }
-        return $sce.trustAsHtml(toReturn);
-    };
-
     //Change programming language in editor
-    $scope.ChangeLanguage = function(lang){
+    $scope.changeLanguage = function(lang){
     	var newLang = Language[lang];
     	if(newLang){
     		$scope.editorOptions.mode = newLang;
@@ -177,7 +169,7 @@ MyApp.controller("InstanceCTRL", [
     };
 
     //Scroll into view line
-    $scope.GoToLine = function(line){
+    $scope.goToLine = function(line){
         var editor = $scope._editor;
         editor.scrollIntoView({ line:line, ch:0 });
         editor.addLineClass(line, "line-active");
@@ -185,7 +177,7 @@ MyApp.controller("InstanceCTRL", [
     };
 
     //Event to send a message
-    $scope.MessageEvent = function(e){
+    $scope.messageEvent = function(e){
         var text = $scope.messageText;
         if(event.keyCode === 13 && text.trim() !== ""){
             $scope.messageText = "";
@@ -193,7 +185,7 @@ MyApp.controller("InstanceCTRL", [
         }
     };
 
-    $scope.RemoveUser = function(obj, cb){
+    $scope.removeUser = function(obj, cb){
         for(var i=0; i != $scope.users.length; ++i){
             var colorAtI = $scope.users[i].color;
             if(obj == colorAtI){
@@ -210,12 +202,12 @@ MyApp.controller("InstanceCTRL", [
 	};
 
     //How many users
-    $scope.Who = function(){
+    $scope.who = function(){
     	return $scope.users.length;
     };
 
     //Event that fires right after user on page subscribes
- 	$scope.PostSubscribe = function(){
+ 	$scope.postSubscribe = function(){
  		var obj = {
  			type: "postsubscribe",
 			name: $scope.name,
@@ -224,7 +216,7 @@ MyApp.controller("InstanceCTRL", [
  		Faye.publish("/" + $scope.instanceId, JSON.stringify(obj));
  	}
 
- 	$scope.Init = function(){
+ 	$scope.init = function(){
         //Initialize event handlers
         $scope.receiveEvents = new ReceiveEventHandler($scope);
         $scope.sendEvents = new SendEventHandler($scope, Faye);
@@ -238,7 +230,7 @@ MyApp.controller("InstanceCTRL", [
  		$scope.users = [];
  	};
 
-    $scope.FayeLoading = function(){
+    $scope.fayeLoading = function(){
         //get users currently in the instance
         Faye.getUsers($scope.instanceId, function(users){
             for(var i=0; i != users.length; ++i){
@@ -267,11 +259,11 @@ MyApp.controller("InstanceCTRL", [
 		});
 		modalInstance.result.then(function (username) {
 			$scope.name = username;
-			$scope.FayeLoading();
+			$scope.fayeLoading();
 		});
     };
 
- 	$scope.Init();
+ 	$scope.init();
  	$scope.open();
 }]);
 

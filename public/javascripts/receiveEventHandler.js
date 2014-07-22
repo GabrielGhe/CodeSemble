@@ -57,32 +57,32 @@ function ReceiveEventHandler(scope){
     };
 
     this.postsubscribe = function(obj){
-        obj.text = (firstTime)? "Welcome " + scope.name : obj.name + " has entered the room";
+        obj.text = (firstTime)? "Welcome " + myScope.name : obj.name + " has entered the room";
         firstTime = false;
-        myScope.AddChatMessage(obj);
-        myScope.AddUser({ name:obj.name, color:obj.color});
+        myScope.addChatMessage(obj);
+        myScope.addUser({ name:obj.name, color:obj.color});
     };
 
     this.scrollIntoView = function(obj){
-        myScope.AddChatMessage(obj);
+        myScope.addChatMessage(obj);
     };
 
     this.sendMessage = function(obj){
-        myScope.AddChatMessage(obj);
+        myScope.addChatMessage(obj);
     };
 
     this.subscribe = function(obj){
-        if(scope.color == ""){
-            scope.color = obj.color;
-            scope.PostSubscribe();
+        if(myScope.color == ""){
+            myScope.color = obj.color;
+            myScope.postSubscribe();
         }
     };
 
     this.unsubscribe = function(obj){
-        myScope.RemoveUser(obj.color, function(whoLeft){
+        myScope.removeUser(obj.color, function(whoLeft){
             var name = (whoLeft.name) || "User";
             obj.text = name + " has left the room";
-            myScope.AddChatMessage(obj);
+            myScope.addChatMessage(obj);
         });
     };
 }
