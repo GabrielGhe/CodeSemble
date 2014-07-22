@@ -110,9 +110,7 @@ MyApp.controller("InstanceCTRL", [
     function($scope, $routeParams, Faye, $sce, Language, $modal, CodeMirrorEditor){
 
 	
-    /**
-     * Codemirror properties
-     */
+    //Codemirror properties
 	$scope.editorOptions = {
         value: "\n",
 		lineNumbers: true,
@@ -122,9 +120,7 @@ MyApp.controller("InstanceCTRL", [
 		autoCloseBrackets : true
     };
 
-    /**
-     * Codemirror editor loaded
-     */
+    //Codemirror editor loaded
     $scope.codemirrorLoaded = function(_editor){
         CodeMirrorEditor.setEditor(_editor);
     	$scope._editor = _editor;
@@ -148,18 +144,13 @@ MyApp.controller("InstanceCTRL", [
         });
     };
 
-    /**
-     * User joined event
-     */
+    //User joined event
     $scope.AddUser = function(obj){
         $scope.$apply(function() {
             $scope.users.push(obj);
         });
     };
 
-    /**
-     * Adds message to chat
-     */
     $scope.AddChatMessage = function(obj){
         $scope.$apply(function() {
             if($scope.comments.length >= 40){
@@ -169,9 +160,15 @@ MyApp.controller("InstanceCTRL", [
         });
     };
 
-    /**
-     * Change programming language in editor
-     */
+    $scope.AuthorCheck = function(author, color){
+        var toReturn = author;
+        if(color === $scope.color){
+            toReturn = "<b>Me</b>";
+        }
+        return $sce.trustAsHtml(toReturn);
+    };
+
+    //Change programming language in editor
     $scope.ChangeLanguage = function(lang){
     	var newLang = Language[lang];
     	if(newLang){
@@ -179,9 +176,7 @@ MyApp.controller("InstanceCTRL", [
     	}
     };
 
-    /**
-     * Scroll into view line
-     */
+    //Scroll into view line
     $scope.GoToLine = function(line){
         var editor = $scope._editor;
         editor.scrollIntoView({ line:line, ch:0 });
@@ -189,10 +184,7 @@ MyApp.controller("InstanceCTRL", [
         editor.removeLineClass(line, "line-active");
     };
 
-    /**
-     * Event to send a message
-     * @param {Event} e [keyup event]
-     */
+    //Event to send a message
     $scope.MessageEvent = function(e){
         var text = $scope.messageText;
         if(event.keyCode === 13 && text.trim() !== ""){
@@ -201,9 +193,6 @@ MyApp.controller("InstanceCTRL", [
         }
     };
 
-    /**
-     * User left event
-     */
     $scope.RemoveUser = function(obj, cb){
         for(var i=0; i != $scope.users.length; ++i){
             var colorAtI = $scope.users[i].color;
@@ -215,23 +204,17 @@ MyApp.controller("InstanceCTRL", [
         }
     };
 
-    /**
-     * Trusted html code
-     */
+    //Trusted html code
 	$scope.to_trusted = function(html_code) {
 		return $sce.trustAsHtml(html_code);
 	};
 
-    /**
-     * How many users
-     */
+    //How many users
     $scope.Who = function(){
     	return $scope.users.length;
     };
 
-    /**
-     * Event that fires right after user on page subscribes
-     */
+    //Event that fires right after user on page subscribes
  	$scope.PostSubscribe = function(){
  		var obj = {
  			type: "postsubscribe",
@@ -241,9 +224,6 @@ MyApp.controller("InstanceCTRL", [
  		Faye.publish("/" + $scope.instanceId, JSON.stringify(obj));
  	}
 
-    /**
-     * Initialization
-     */
  	$scope.Init = function(){
         //Initialize event handlers
         $scope.receiveEvents = new ReceiveEventHandler($scope);
@@ -258,9 +238,6 @@ MyApp.controller("InstanceCTRL", [
  		$scope.users = [];
  	};
 
-    /**
-     * Load Faye information
-     */
     $scope.FayeLoading = function(){
         //get users currently in the instance
         Faye.getUsers($scope.instanceId, function(users){
@@ -281,10 +258,7 @@ MyApp.controller("InstanceCTRL", [
         });
     };
 
-    /**
-     * Open Modal
-     * @return {[type]} [description]
-     */
+    //Open Modal
  	$scope.open = function () {
 		var modalInstance = $modal.open({
 			templateUrl: "modal.html",
@@ -307,18 +281,14 @@ MyApp.controller("InstanceCTRL", [
  * ##
  * ############################################################################### */
 MyApp.controller("ModalCtrl", ["$scope", "$modalInstance", function($scope, $modalInstance){
-    /**
-     * Accept name
-     */
+    //Accept name
 	$scope.ok = function (username) {
         if(username.trim() !== ""){
             $modalInstance.close(username);
         }
 	};
 
-    /**
-     * User pressed enter
-     */
+    //User pressed enter
     $scope.enter = function(event, username){
         if(event.keyCode === 13){
             $scope.ok(username);

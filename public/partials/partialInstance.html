@@ -44,7 +44,7 @@
 
 				<div ng-switch-when="sendMessage">
 					<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
-					<span><b>{{comment.author}}: </b></span>
+					<span ng-bind-html="AuthorCheck(comment.author, comment.color)"></span>:
 					<span ng-bind-html="to_trusted(comment.text)">?</span>
 				</div>
 
