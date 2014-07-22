@@ -35,7 +35,6 @@ MyApp.factory("Faye", ["$log", "$http", function($log, $http){
 		},
 
 		getUsers: function(id, cb){
-			users = [];
 			$http.get("/" + id + "/users").then(function(response) {
 				cb(response.data);
 			});
@@ -260,6 +259,29 @@ MyApp.controller("InstanceCTRL", [
  	};
 
     /**
+     * Load Faye information
+     */
+    $scope.FayeLoading = function(){
+        //get users currently in the instance
+        Faye.getUsers($scope.instanceId, function(users){
+            for(var i=0; i != users.length; ++i){
+                $scope.users.push({ color: users[i] });
+            }
+        });
+        // Listen to data coming from the server via Faye
+        Faye.subscribe("/" + $scope.instanceId, function(msg) {
+            // Handle messages
+            var message = JSON.parse(msg);
+            var func = $scope.receiveEvents[message.type];
+            if(func) func(message);
+        });
+        //if someone leaves page, tell everyone
+        angular.element(window).bind("beforeunload", function(){
+            Faye.unsubscribe();
+        });
+    };
+
+    /**
      * Open Modal
      * @return {[type]} [description]
      */
@@ -274,29 +296,6 @@ MyApp.controller("InstanceCTRL", [
 			$scope.FayeLoading();
 		});
     };
-
-    /**
-     * Load Faye information
-     */
- 	$scope.FayeLoading = function(){
- 		//get users currently in the instance
- 		Faye.getUsers($scope.instanceId, function(users){
- 			for(var i=0; i != users.length; ++i){
- 				$scope.users.push({ color: users[i] });
- 			}
- 		});
- 		// Listen to data coming from the server via Faye
-		Faye.subscribe("/" + $scope.instanceId, function(msg) {
-			// Handle messages
-			var message = JSON.parse(msg);
-			var func = $scope.receiveEvents[message.type];
-			if(func) func(message);
-		});
-		//if someone leaves page, tell everyone
-		angular.element(window).bind("beforeunload", function(){
-			Faye.unsubscribe();
-		});
- 	};
 
  	$scope.Init();
  	$scope.open();
