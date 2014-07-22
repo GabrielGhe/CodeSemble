@@ -1,12 +1,12 @@
 "use strict";
 
 //http://cdnjs.com/libraries/codemirror
-var MyApp = angular.module('MyApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ui.codemirror', 'luegg.directives']);
+var MyApp = angular.module("MyApp", ["ngRoute", "ngAnimate", "ui.bootstrap", "ui.codemirror", "luegg.directives"]);
 
 //Routing Configuration 
-MyApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
+MyApp.config(["$routeProvider", "$locationProvider", function($routeProvider, $locationProvider){
 	$routeProvider
-		.when('/:id', { templateUrl : "partials/partialInstance.html", controller : "InstanceCTRL"})
+		.when("/:id", { templateUrl : "partials/partialInstance.html", controller : "InstanceCTRL"})
 		.otherwise({ redirectTo : '/'});
 
 	$locationProvider.html5Mode(true);
@@ -14,9 +14,9 @@ MyApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $l
 
 
 //Faye factory
-MyApp.factory('Faye', ['$log', '$http', function($log, $http){
+MyApp.factory("Faye", ["$log", "$http", function($log, $http){
 	var subscription;
-	var client = new Faye.Client('http://localhost:3000/faye', {
+	var client = new Faye.Client("http://localhost:3000/faye", {
 		timeout : 60
 	});
 
@@ -44,7 +44,7 @@ MyApp.factory('Faye', ['$log', '$http', function($log, $http){
 }]);
 
 //Faye factory
-MyApp.factory('CodeMirrorEditor', [function(){
+MyApp.factory("CodeMirrorEditor", [function(){
     var _editor;
 
     return {
@@ -70,20 +70,20 @@ MyApp.filter("notme", function(){
 	}
 });
 
-MyApp.directive('usercursor', ['CodeMirrorEditor', function(CodeMirrorEditor){
+MyApp.directive("usercursor", ["CodeMirrorEditor", function(CodeMirrorEditor){
     var editor = CodeMirrorEditor;
 
 	return {
-        restrict:'E',
+        restrict:"E",
         link:function (scope, element, attrs) {
-            element.addClass('userCursor');
+            element.addClass("userCursor");
             CodeMirrorEditor.getEditor().addWidget({line: 0, ch:0}, element[0]);
 
             scope.$watch(attrs.x, function (x) {
-                element.css('left', x + 'px');
+                element.css("left", x + "px");
             });
             scope.$watch(attrs.y, function (y) {
-                element.css('top', y + 'px');
+                element.css("top", y + "px");
             });
         }
     };
@@ -107,7 +107,7 @@ MyApp.constant("Language", {
  * ##
  * ############################################################################### */
 MyApp.controller("InstanceCTRL", [
-	'$scope','$routeParams', 'Faye', '$sce', 'Language', '$modal', 'CodeMirrorEditor', 
+	"$scope","$routeParams", "Faye", "$sce", "Language", "$modal", "CodeMirrorEditor", 
     function($scope, $routeParams, Faye, $sce, Language, $modal, CodeMirrorEditor){
 
 	
@@ -186,8 +186,8 @@ MyApp.controller("InstanceCTRL", [
     $scope.GoToLine = function(line){
         var editor = $scope._editor;
         editor.scrollIntoView({ line:line, ch:0 });
-        editor.addLineClass(line, 'line-active');
-        editor.removeLineClass(line, 'line-active');
+        editor.addLineClass(line, "line-active");
+        editor.removeLineClass(line, "line-active");
     };
 
     /**
@@ -239,7 +239,7 @@ MyApp.controller("InstanceCTRL", [
 			name: $scope.name,
 			color: $scope.color
  		};
- 		Faye.publish('/' + $scope.instanceId, JSON.stringify(obj));
+ 		Faye.publish("/" + $scope.instanceId, JSON.stringify(obj));
  	}
 
     /**
@@ -254,7 +254,7 @@ MyApp.controller("InstanceCTRL", [
  		$scope.name = "";
         $scope.instanceId = $routeParams.id;
         $scope.color = "";
- 		$scope.files = ['untitled.js', 'thingy.css'];
+ 		$scope.files = ["untitled.js", "thingy.css"];
  		$scope.comments = [];
  		$scope.users = [];
  	};
@@ -265,9 +265,9 @@ MyApp.controller("InstanceCTRL", [
      */
  	$scope.open = function () {
 		var modalInstance = $modal.open({
-			templateUrl: 'modal.html',
-			controller: 'ModalCtrl',
-			backdrop: 'static'
+			templateUrl: "modal.html",
+			controller: "ModalCtrl",
+			backdrop: "static"
 		});
 		modalInstance.result.then(function (username) {
 			$scope.name = username;
@@ -286,7 +286,7 @@ MyApp.controller("InstanceCTRL", [
  			}
  		});
  		// Listen to data coming from the server via Faye
-		Faye.subscribe('/' + $scope.instanceId, function(msg) {
+		Faye.subscribe("/" + $scope.instanceId, function(msg) {
 			// Handle messages
 			var message = JSON.parse(msg);
 			var func = $scope.receiveEvents[message.type];
@@ -307,7 +307,7 @@ MyApp.controller("InstanceCTRL", [
  * ##							ModalCtrl
  * ##
  * ############################################################################### */
-MyApp.controller("ModalCtrl", ['$scope', '$modalInstance', function($scope, $modalInstance){
+MyApp.controller("ModalCtrl", ["$scope", "$modalInstance", function($scope, $modalInstance){
     /**
      * Accept name
      */

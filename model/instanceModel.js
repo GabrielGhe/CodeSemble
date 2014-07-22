@@ -29,7 +29,7 @@ instanceModelSchema.statics.createSingleInstance = function(res){
 	var unixTimestamp = moment().unix();
 	var entry = new this({ users: [], created: unixTimestamp, updated: unixTimestamp });
 	entry.save();
-	console.log("Created new Instance " + entry.id);
+	console.log('Created new Instance ' + entry.id);
 	res.redirect(301, "/" + entry.id);
 }
 
@@ -59,7 +59,7 @@ instanceModelSchema.statics.getInstance = function(inst_id, res){
  */
 instanceModelSchema.statics.getUsers = function(inst_id, res){
 	var Model = this;
-	Model.findOne({ "_id" : inst_id }, function(err, obj){
+	Model.findOne({ '_id' : inst_id }, function(err, obj){
 		var users = [];
 		if(!err && obj){
 			users = obj.users.map(function(el){
@@ -76,8 +76,8 @@ instanceModelSchema.statics.getUsers = function(inst_id, res){
  */
 instanceModelSchema.statics.removeAllEmpty = function(){
 	this.remove({ $or: [
-		{ "users" : { $size: 0 } },
-		{ "updated": { $lt: moment().subtract("hours", 3).unix() }}
+		{ 'users' : { $size: 0 } },
+		{ 'updated': { $lt: moment().subtract('hours', 3).unix() }}
 	]}, function(err, x){});
 }
 
@@ -90,7 +90,7 @@ instanceModelSchema.statics.removeAllEmpty = function(){
 instanceModelSchema.statics.removeSingleUser = function(user_id, inst_id, cb){
 	var Model = this;
 	var good_inst_id = inst_id.substring(1);
-	Model.update({ "_id" : good_inst_id}, {$pull : {users : { _id: user_id } } }, function(err, model){
+	Model.update({ '_id' : good_inst_id}, {$pull : {users : { _id: user_id } } }, function(err, model){
 		if(!err){
 			Model.removeAllEmpty();
 			cb(model.user_id);
@@ -137,13 +137,11 @@ instanceModelSchema.statics.setSingleUserName = function(user_id, inst_id, name)
  * Method to update creation time
  * @param  {String} inst_id [session id]
  */
-instanceModelSchema.statics.updateDateInstance = function(inst_id, cb){
+instanceModelSchema.statics.updateDateInstance = function(inst_id){
 	var Model = this;
 	var good_inst_id = inst_id.substring(1);
 	Model.update({ '_id' : good_inst_id}, {$set: { 'updated': moment().unix() }}, function(err, model){
-		if(err){
-			console.log("Error updating date", err);
-		}
+		if(err) console.log('Error updating date', err);
 	});
 }
 
