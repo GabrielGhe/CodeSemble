@@ -93,8 +93,8 @@ IDs --------------------------------------------
 	height:-webkit-calc(60% - 1px);
 	height:-moz-calc(60% - 1px);
 	height:calc(60% - 1px);
-	border-top:2px solid;
-	border-color:#bdbdbd;
+	border-top:5px solid;
+	border-color:#272822;
 }
 
 #side-chat-input {
@@ -120,6 +120,7 @@ Classes ---------------------------------------
 
 .message {
 	padding: 13px 16px 13px 16px;
+	border-bottom: 1px solid lightgray;
 }
 
 .message div {
@@ -127,12 +128,8 @@ Classes ---------------------------------------
 	word-wrap: break-word;
 }
 
-.message:nth-child(odd){
-	background-color:#e0e0e0;
-}
-
-.message:nth-child(even){
-	background-color:#bdbdbd;
+.message a {
+	cursor:pointer;
 }
 
 .subscribe {
@@ -207,7 +204,8 @@ Classes ---------------------------------------
 }
 
 .line-active {
-	background-color:blue;
+	-webkit-animation: fadeIn 0.3s;
+    animation: fadeIn 0.3s;
 }
 
 .CodeMirror-linenumber {
@@ -218,4 +216,13 @@ Classes ---------------------------------------
 
 .CodeMirror-linenumber:hover {
 	color:lightgreen !important;
+}
+
+@-webkit-keyframes fadeIn {
+    from {background: transparent;}
+    to {background: #18bc9c;}
+}
+@keyframes fadeIn {
+    from {background: transparent;}
+    to {background: #18bc9c;}
 }

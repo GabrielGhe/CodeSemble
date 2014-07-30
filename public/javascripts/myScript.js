@@ -106,8 +106,8 @@ MyApp.constant("Language", {
  * ##
  * ############################################################################### */
 MyApp.controller("InstanceCTRL", [
-	"$scope","$routeParams", "Faye", "$sce", "Language", "$modal", "CodeMirrorEditor", 
-    function($scope, $routeParams, Faye, $sce, Language, $modal, CodeMirrorEditor){
+	"$scope","$routeParams", "Faye", "$sce", "Language", "$modal", "CodeMirrorEditor", "$timeout",
+    function($scope, $routeParams, Faye, $sce, Language, $modal, CodeMirrorEditor, $timeout){
 
 	
     //Codemirror properties
@@ -172,8 +172,10 @@ MyApp.controller("InstanceCTRL", [
     $scope.goToLine = function(line){
         var editor = $scope._editor;
         editor.scrollIntoView({ line:line, ch:0 });
-        editor.addLineClass(line, "line-active");
-        editor.removeLineClass(line, "line-active");
+        editor.addLineClass(line, "text", "line-active");
+        $timeout(function(){
+            editor.removeLineClass(line, "text", "line-active");
+        },500);
     };
 
     //Event to send a message

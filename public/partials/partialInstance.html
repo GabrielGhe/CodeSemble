@@ -24,6 +24,7 @@
 		</ul>
 	</div>
 	<!-- END files -->
+
 	<!-- chat -->
 	<div id="chat-container">
 
@@ -51,7 +52,7 @@
 				<div ng-switch-when="scrollIntoView">
 					<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
 					<span><b>{{comment.author}}: </b></span>
-					<span ng-click="goToLine(comment.line)" ng-bind-html="to_trusted(comment.text)">?</span>
+					<a ng-click="goToLine(comment.line)" ng-bind-html="to_trusted(comment.text)">?</a>
 				</div>
 			</li>
 		</ul>
