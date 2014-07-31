@@ -19,9 +19,13 @@ exports.setup = function(bay) {
 		    		if(data['type'] === 'postsubscribe'){
 		    			InstanceModel.setSingleUserName(message.clientId, message.channel, data['name']);
 		    		}
-		    		if(eventList.indexOf(data['type']) > -1){
+                    var pos = eventList.indexOf(data['type']);
+		    		if(pos > -1){
 		    			InstanceModel.updateDateInstance(message.channel);
 		    		}
+                    if(pos > 0){
+                        InstanceModel.updateFile(message.channel, data);
+                    }
 		    	}
 		    }finally{
 		    	callback(message);

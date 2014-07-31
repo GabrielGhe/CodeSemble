@@ -95,6 +95,26 @@ instanceModelSchema.statics.getUsers = function(inst_id, res) {
  * @param  {String} inst_id [session id]
  * @param  {Object} res     [response]
  */
+instanceModelSchema.statics.getFile = function(inst_id, pos, res) {
+    var Model = this;
+    Model.findOne({
+        '_id': inst_id
+    }, function(err, obj) {
+        if (!err && obj) {
+            var file = obj.files[pos];
+            if(file){
+                res.write(JSON.stringify(file));
+            }
+            res.end();
+        }
+    });
+}
+
+/**
+ * Method to get all the users
+ * @param  {String} inst_id [session id]
+ * @param  {Object} res     [response]
+ */
 instanceModelSchema.statics.getFiles = function(inst_id, res) {
     var Model = this;
     Model.findOne({
@@ -223,6 +243,15 @@ instanceModelSchema.statics.updateDateInstance = function(inst_id) {
     }, function(err, model) {
         if (err) console.log('Error updating date', err);
     });
+}
+
+/**
+ * Method to get all the users
+ * @param  {String} inst_id [session id]
+ * @param  {Object} data    [data]
+ */
+instanceModelSchema.statics.updateFile = function(inst_id, data) {
+    
 }
 
 module.exports = mongoose.model('InstanceModel', instanceModelSchema, 'InstanceModel');
