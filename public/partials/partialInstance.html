@@ -18,7 +18,8 @@
 		</div>
 		
 		<ul id="side-tabs">
-			<li class="tabs" ng-repeat="file in files | filter:query track by $index">
+			<li class="tabs" ng-repeat="file in files | filter:query track by $index"
+			ng-class="{ active: $index === myFile }">
 				<i class="fa fa-file-o fa-lg"></i> <span ng-bind-html="to_trusted(file)"></span>
 			</li>
 		</ul>

@@ -5,12 +5,17 @@ var ColorMaker = require('../utils/colorMaker');
 var moment = require('moment');
 
 var instanceModelSchema = mongoose.Schema({
-	users : [{
-		_id: String,
-		name: String,
-	}],
-	updated: Number,
-	created: Number
+    users: [{
+        _id: String,
+        name: String,
+    }],
+    files: [{
+        name: String,
+        text: String,
+        mode: String
+    }],
+    updated: Number,
+    created: Number
 });
 
 //createSingleInstance
@@ -25,12 +30,20 @@ var instanceModelSchema = mongoose.Schema({
 /**
  * Method used to create new session
  */
-instanceModelSchema.statics.createSingleInstance = function(res){
-	var unixTimestamp = moment().unix();
-	var entry = new this({ users: [], created: unixTimestamp, updated: unixTimestamp });
-	entry.save();
-	console.log('Created new Instance ' + entry.id);
-	res.redirect(301, "/" + entry.id);
+instanceModelSchema.statics.createSingleInstance = function(res) {
+    var unixTimestamp = moment().unix();
+    var entry = new this({
+        users: [],
+        files: [{
+            name: "untitled.js",
+            text: "\n\n\n"
+        }],
+        created: unixTimestamp,
+        updated: unixTimestamp
+    });
+    entry.save();
+    console.log('Created new Instance ' + entry.id);
+    res.redirect(301, "/" + entry.id);
 }
 
 /**
@@ -38,17 +51,21 @@ instanceModelSchema.statics.createSingleInstance = function(res){
  * @param  {String} inst_id [session id]
  * @param  {Object} res     [response]
  */
-instanceModelSchema.statics.getInstance = function(inst_id, res){
-	var Model = this;
-	Model.findOne({ "_id" : inst_id }, function(err, obj){
-		var users;
-		if(!err && obj){
-			res.render('instanceView', { title: 'CodeSemble' });
-		} else {
-			if(err) console.log(err);
-			if(!obj) res.redirect(301, "/404"); //TODO make a 404
-		}
-	});
+instanceModelSchema.statics.getInstance = function(inst_id, res) {
+    var Model = this;
+    Model.findOne({
+        "_id": inst_id
+    }, function(err, obj) {
+        var users;
+        if (!err && obj) {
+            res.render('instanceView', {
+                title: 'CodeSemble'
+            });
+        } else {
+            if (err) console.log(err);
+            if (!obj) res.redirect(301, "/404"); //TODO make a 404
+        }
+    });
 }
 
 
@@ -57,28 +74,58 @@ instanceModelSchema.statics.getInstance = function(inst_id, res){
  * @param  {String} inst_id [session id]
  * @param  {Object} res     [response]
  */
-instanceModelSchema.statics.getUsers = function(inst_id, res){
-	var Model = this;
-	Model.findOne({ '_id' : inst_id }, function(err, obj){
-		var users = [];
-		if(!err && obj){
-			users = obj.users.map(function(el){
-				return ColorMaker.makeRGB(el._id);
-			});
-		}
-		res.write(JSON.stringify(users));
-		res.end();
-	});
+instanceModelSchema.statics.getUsers = function(inst_id, res) {
+    var Model = this;
+    Model.findOne({
+        '_id': inst_id
+    }, function(err, obj) {
+        var users = [];
+        if (!err && obj) {
+            users = obj.users.map(function(el) {
+                return ColorMaker.makeRGB(el._id);
+            });
+        }
+        res.write(JSON.stringify(users));
+        res.end();
+    });
+}
+
+/**
+ * Method to get all the users
+ * @param  {String} inst_id [session id]
+ * @param  {Object} res     [response]
+ */
+instanceModelSchema.statics.getFiles = function(inst_id, res) {
+    var Model = this;
+    Model.findOne({
+        '_id': inst_id
+    }, function(err, obj) {
+        var files = [];
+        if (!err && obj) {
+            files = obj.files.map(function(el) {
+                return el.name;
+            });
+            res.write(JSON.stringify(files));
+            res.end();
+        }
+    });
 }
 
 /**
  * Method to remove empty Instances
  */
-instanceModelSchema.statics.removeAllEmpty = function(){
-	this.remove({ $or: [
-		{ 'users' : { $size: 0 } },
-		{ 'updated': { $lt: moment().subtract('hours', 3).unix() }}
-	]}, function(err, x){});
+instanceModelSchema.statics.removeAllEmpty = function() {
+    this.remove({
+        $or: [{
+            'users': {
+                $size: 0
+            }
+        }, {
+            'updated': {
+                $lt: moment().subtract('hours', 3).unix()
+            }
+        }]
+    }, function(err, x) {});
 }
 
 /**
@@ -87,17 +134,25 @@ instanceModelSchema.statics.removeAllEmpty = function(){
  * @param  {string} inst_id [Id of the session]
  * @param  {func} cb [callback]
  */
-instanceModelSchema.statics.removeSingleUser = function(user_id, inst_id, cb){
-	var Model = this;
-	var good_inst_id = inst_id.substring(1);
-	Model.update({ '_id' : good_inst_id}, {$pull : {users : { _id: user_id } } }, function(err, model){
-		if(!err){
-			Model.removeAllEmpty();
-			cb(model.user_id);
-		} else {
-			console.log(err);
-		}
-	});
+instanceModelSchema.statics.removeSingleUser = function(user_id, inst_id, cb) {
+    var Model = this;
+    var good_inst_id = inst_id.substring(1);
+    Model.update({
+        '_id': good_inst_id
+    }, {
+        $pull: {
+            users: {
+                _id: user_id
+            }
+        }
+    }, function(err, model) {
+        if (!err) {
+            Model.removeAllEmpty();
+            cb(model.user_id);
+        } else {
+            console.log(err);
+        }
+    });
 }
 
 /**
@@ -105,17 +160,25 @@ instanceModelSchema.statics.removeSingleUser = function(user_id, inst_id, cb){
  * @param  {string} user_id [Id of the user]
  * @param  {string} inst_id [Id of the session]
  */
-instanceModelSchema.statics.saveSingleUser = function(user_id, inst_id, cb){
-	var Model = this;
-	var good_inst_id = inst_id.substring(1);
-	var user_obj = { _id: user_id };
-	Model.update({ _id : good_inst_id}, {$push : { users : user_obj }}, function(err, model){
-		if(err){
-			console.log(err);
-		} else {
-			cb();
-		}
-	});
+instanceModelSchema.statics.saveSingleUser = function(user_id, inst_id, cb) {
+    var Model = this;
+    var good_inst_id = inst_id.substring(1);
+    var user_obj = {
+        _id: user_id
+    };
+    Model.update({
+        _id: good_inst_id
+    }, {
+        $push: {
+            users: user_obj
+        }
+    }, function(err, model) {
+        if (err) {
+            console.log(err);
+        } else {
+            cb();
+        }
+    });
 }
 
 /**
@@ -124,12 +187,23 @@ instanceModelSchema.statics.saveSingleUser = function(user_id, inst_id, cb){
  * @param  {String} inst_id [Id of the session]
  * @param  {String} name    [name to set]
  */
-instanceModelSchema.statics.setSingleUserName = function(user_id, inst_id, name){
-	var Model = this;
-	var good_inst_id = inst_id.substring(1);
-	Model.update({ _id: good_inst_id, users: { _id: user_id }}, {$set: { 'users.$.name': name }}, function(err, model){
-		if(err){ console.log(err); }
-	});
+instanceModelSchema.statics.setSingleUserName = function(user_id, inst_id, name) {
+    var Model = this;
+    var good_inst_id = inst_id.substring(1);
+    Model.update({
+        _id: good_inst_id,
+        users: {
+            _id: user_id
+        }
+    }, {
+        $set: {
+            'users.$.name': name
+        }
+    }, function(err, model) {
+        if (err) {
+            console.log(err);
+        }
+    });
 }
 
 
@@ -137,12 +211,18 @@ instanceModelSchema.statics.setSingleUserName = function(user_id, inst_id, name)
  * Method to update creation time
  * @param  {String} inst_id [session id]
  */
-instanceModelSchema.statics.updateDateInstance = function(inst_id){
-	var Model = this;
-	var good_inst_id = inst_id.substring(1);
-	Model.update({ '_id' : good_inst_id}, {$set: { 'updated': moment().unix() }}, function(err, model){
-		if(err) console.log('Error updating date', err);
-	});
+instanceModelSchema.statics.updateDateInstance = function(inst_id) {
+    var Model = this;
+    var good_inst_id = inst_id.substring(1);
+    Model.update({
+        '_id': good_inst_id
+    }, {
+        $set: {
+            'updated': moment().unix()
+        }
+    }, function(err, model) {
+        if (err) console.log('Error updating date', err);
+    });
 }
 
 module.exports = mongoose.model('InstanceModel', instanceModelSchema, 'InstanceModel');
