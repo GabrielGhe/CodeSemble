@@ -13,7 +13,12 @@ InstanceModel.removeAllEmpty();
 //Mongoose connecting
 //---------------------------------------------
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/codesemble');
+if (process.env.NODE_ENV === 'production') {
+    mongoose.connect('mongodb://cmg427:First Heroku App@kahana.mongohq.com:10034/app28150436');
+} else {
+    mongoose.connect('mongodb://localhost/codesemble');
+}
+
 mongoose.connection.on('error', function() {
   console.error('✗ MongoDB Connection Error. Please make sure MongoDB is running.');
 });

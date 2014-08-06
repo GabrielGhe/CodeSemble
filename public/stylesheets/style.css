@@ -90,11 +90,7 @@ IDs --------------------------------------------
 	float:left;
 	position:relative;
 	width: 100%;
-	height:-webkit-calc(60% - 1px);
-	height:-moz-calc(60% - 1px);
-	height:calc(60% - 1px);
-	border-top:5px solid;
-	border-color:#272822;
+	height:100%;
 }
 
 #side-chat-input {
@@ -107,9 +103,9 @@ IDs --------------------------------------------
 
 #side-chat-messages {
 	float:left;
-	height:-webkit-calc(100% - 41px);
-	height:-moz-calc(100% - 41px);
-	height:calc(100% - 41px);
+	height:-webkit-calc(100% - 43px);
+	height:-moz-calc(100% - 43px);
+	height:calc(100% - 43px);
 	width:100%;
 	overflow-y:auto;
 }

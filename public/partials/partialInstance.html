@@ -9,23 +9,6 @@
 <!-- side -->
 <div id="side">
 
-	<!-- files -->
-	<div id="side-tabs-container">
-
-		<div id="fileFilter">
-			<i class="fa fa-search"></i>
-			<input ng-model="query" placeholder="Search {{files.length}} File(s)" type="text" class="form-control">
-		</div>
-		
-		<ul id="side-tabs">
-			<li class="tabs" ng-repeat="file in files | filter:query track by $index"
-			ng-class="{ active: $index === myFile }">
-				<i class="fa fa-file-o fa-lg"></i> <span ng-bind-html="to_trusted(file)"></span>
-			</li>
-		</ul>
-	</div>
-	<!-- END files -->
-
 	<!-- chat -->
 	<div id="chat-container">
 
