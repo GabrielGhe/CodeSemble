@@ -25,6 +25,6 @@ exports.getUsers = function(req, res){
 	InstanceModel.getUsers(req.params.id, res);
 };
 
-exports.getFiles = function(req, res){
-    InstanceModel.getFiles(req.params.id, res);
+exports.getFile = function(req, res){
+    InstanceModel.getFile(req.params.id, res);
 };

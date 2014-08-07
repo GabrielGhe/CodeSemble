@@ -3,17 +3,15 @@
 var mongoose = require('mongoose');
 var ColorMaker = require('../utils/colorMaker');
 var moment = require('moment');
+var ReadWriteLock = require('rwlock');
+var lock = new ReadWriteLock();
 
 var instanceModelSchema = mongoose.Schema({
     users: [{
         _id: String,
         name: String,
     }],
-    files: [{
-        name: String,
-        text: String,
-        mode: String
-    }],
+    file: String,
     updated: Number,
     created: Number
 });
@@ -34,10 +32,7 @@ instanceModelSchema.statics.createSingleInstance = function(res) {
     var unixTimestamp = moment().unix();
     var entry = new this({
         users: [],
-        files: [{
-            name: "untitled.js",
-            text: "\n\n\n"
-        }],
+        file: "\n\n\n",
         created: unixTimestamp,
         updated: unixTimestamp
     });
@@ -95,37 +90,16 @@ instanceModelSchema.statics.getUsers = function(inst_id, res) {
  * @param  {String} inst_id [session id]
  * @param  {Object} res     [response]
  */
-instanceModelSchema.statics.getFile = function(inst_id, pos, res) {
+instanceModelSchema.statics.getFile = function(inst_id, res) {
     var Model = this;
     Model.findOne({
         '_id': inst_id
     }, function(err, obj) {
         if (!err && obj) {
-            var file = obj.files[pos];
+            var file = obj.file;
             if(file){
                 res.write(JSON.stringify(file));
             }
-            res.end();
-        }
-    });
-}
-
-/**
- * Method to get all the users
- * @param  {String} inst_id [session id]
- * @param  {Object} res     [response]
- */
-instanceModelSchema.statics.getFiles = function(inst_id, res) {
-    var Model = this;
-    Model.findOne({
-        '_id': inst_id
-    }, function(err, obj) {
-        var files = [];
-        if (!err && obj) {
-            files = obj.files.map(function(el) {
-                return el.name;
-            });
-            res.write(JSON.stringify(files));
             res.end();
         }
     });
@@ -250,8 +224,83 @@ instanceModelSchema.statics.updateDateInstance = function(inst_id) {
  * @param  {String} inst_id [session id]
  * @param  {Object} data    [data]
  */
-instanceModelSchema.statics.updateFile = function(inst_id, data) {
-    
+instanceModelSchema.statics.updateFile = function(inst_id, data){
+    var Model = this;
+    var good_inst_id = inst_id.substring(1);
+    var obj = {};
+
+    function addText(data, model, release){
+        var text = model.file.split("\n");
+        var line = text[data.from.line];
+        var toadd = (data.text === "")? "\n" : data.text;
+        line = line.slice(0, data.from.ch) + toadd + line.slice(data.from.ch);
+        text[data.from.line] = line;
+        model.file = text.join("\n");
+        model.save(function(e){
+            release();
+        });
+    }
+
+    function removeText(data, model, release){
+        var text = model.file;
+        var curChar = 0;
+        var curLine = 0;
+
+        var firstPos;
+        var secondPos;
+        for(var i = 0; i < text.length; ++i){
+            if(data.from.line === curLine && data.from.ch === curChar){
+                firstPos = i;
+            } else if(data.to.line === curLine && data.to.ch === curChar){
+                secondPos = i;
+                break;
+            }
+
+            if(text[i] == "\n"){
+                ++curLine;
+            } else {
+                ++curChar;
+            }
+        }
+
+        var firstPart = text.slice(0, firstPos);
+        var secondPart = (secondPos && text.slice(secondPos)) || "";
+
+        model.file = firstPart + secondPart;
+        model.save(function(e){
+            release();
+        });
+    }
+
+    //CUT
+    obj.cut = function(data, model, release){
+        removeText(data, model, release);
+    };
+    //DELETE
+    obj["+delete"] = function(data, model, release){
+        removeText(data, model, release);
+    };
+    //PASTE
+    obj.paste = function(data, model, release){
+        addText(data,model, release);
+    };
+    //ADD
+    obj["+input"] = function(data, model, release){
+        addText(data,model, release);
+    };
+
+    Model.findOne({
+        "_id": good_inst_id
+    }, function(err, model) {
+        if (!err && model) {
+            var func = obj[data['type']];
+            if(func){
+                lock.writeLock(good_inst_id, function (release) {
+                    func(data, model, release);
+                });
+            }       
+        }
+    });
 }
 
 module.exports = mongoose.model('InstanceModel', instanceModelSchema, 'InstanceModel');

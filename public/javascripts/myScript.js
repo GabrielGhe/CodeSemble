@@ -48,8 +48,8 @@ MyApp.factory("Faye", ["$log", "$http",
                 });
             },
 
-            getFiles: function(id, cb) {
-                $http.get("/" + id + "/files").then(function(response) {
+            getFile: function(id, cb) {
+                $http.get("/" + id + "/file").then(function(response) {
                     cb(response.data);
                 });
             }
@@ -138,8 +138,7 @@ MyApp.controller("InstanceCTRL", [
             lineNumbers: true,
             matchBrackets: true,
             mode: "javascript",
-            theme: "monokai",
-            autoCloseBrackets: true
+            theme: "monokai"
         };
 
         //Codemirror editor loaded
@@ -252,8 +251,6 @@ MyApp.controller("InstanceCTRL", [
             $scope.name = "";
             $scope.instanceId = $routeParams.id;
             $scope.color = "";
-            $scope.files = [];
-            $scope.myFile = 0;
             $scope.comments = [];
             $scope.users = [];
         };
@@ -265,13 +262,12 @@ MyApp.controller("InstanceCTRL", [
                     $scope.users.push({
                         color: users[i]
                     });
-                    deferred.resolve();
                 }
             });
 
-            //Get files
-            Faye.getFiles($scope.instanceId, function(files) {
-                $scope.files = files;
+            //Get file
+            Faye.getFile($scope.instanceId, function(file) {
+                $scope._editor.setValue(JSON.parse(file));
             });
 
             // Listen to data coming from the server via Faye
