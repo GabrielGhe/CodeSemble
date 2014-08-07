@@ -24,7 +24,7 @@ MyApp.config(["$routeProvider", "$locationProvider",
 MyApp.factory("Faye", ["$log", "$http",
     function($log, $http) {
         var subscription;
-        var client = new Faye.Client("http://localhost:3000/faye", {
+        var client = new Faye.Client("/faye", {
             timeout: 60
         });
 
