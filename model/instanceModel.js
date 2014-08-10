@@ -243,12 +243,17 @@ instanceModelSchema.statics.updateFile = function(inst_id, data){
 
     function removeText(data, model, release){
         var text = model.file;
+        var lines = text.split("\n");
         var curChar = 0;
         var curLine = 0;
 
         var firstPos;
         var secondPos;
         for(var i = 0; i < text.length; ++i){
+            if (curLine = data.to.line) {
+                data.to.ch = (data.to.ch > lines[curLine].length)? lines[curLine].length : data.to.ch;
+            }
+            
             if(data.from.line === curLine && data.from.ch === curChar){
                 firstPos = i;
             } else if(data.to.line === curLine && data.to.ch === curChar){
@@ -258,6 +263,7 @@ instanceModelSchema.statics.updateFile = function(inst_id, data){
 
             if(text[i] == "\n"){
                 ++curLine;
+                curChar = 0;
             } else {
                 ++curChar;
             }
