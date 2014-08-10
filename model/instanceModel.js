@@ -244,35 +244,38 @@ instanceModelSchema.statics.updateFile = function(inst_id, data){
     function removeText(data, model, release){
         var text = model.file;
         var lines = text.split("\n");
-        var curChar = 0;
-        var curLine = 0;
-
-        var firstPos;
-        var secondPos;
-        for(var i = 0; i < text.length; ++i){
-            if (curLine = data.to.line) {
-                data.to.ch = (data.to.ch > lines[curLine].length)? lines[curLine].length : data.to.ch;
-            }
-            
-            if(data.from.line === curLine && data.from.ch === curChar){
-                firstPos = i;
-            } else if(data.to.line === curLine && data.to.ch === curChar){
-                secondPos = i;
-                break;
+        
+        function removeLinesInBetween(lines, start, end){
+            var removed = 0;
+            for(var i=end-1; i > start; --i){
+                lines.splice(i, 1);
+                ++removed;
             }
 
-            if(text[i] == "\n"){
-                ++curLine;
-                curChar = 0;
-            } else {
-                ++curChar;
-            }
+            return {
+                removed: removed,
+                lines: lines
+            };
         }
 
-        var firstPart = text.slice(0, firstPos);
-        var secondPart = (secondPos && text.slice(secondPos)) || "";
+        function replaceRange(s, start, end, substitute) {
+            return s.substring(0, start) + substitute + s.substring(end);
+        }
 
-        model.file = firstPart + secondPart;
+        var newLines = removeLinesInBetween(lines, data.from.line, data.to.line);
+        lines = newLines.lines;
+        data.to.line -= newLines.removed;
+
+        //same line
+        if (data.from.line === data.to.line){
+            lines[data.from.line] = replaceRange(lines[data.from.line], data.from.ch, data.to.ch, "");
+        } else {
+            //diff line
+            lines[data.from.line] = lines[data.from.line].substring(0, data.from.ch) + lines[data.to.line].substring(data.to.ch);
+            lines.splice(data.to.line, 1);
+        }
+
+        model.file = lines.join("\n");
         model.save(function(e){
             release();
         });
