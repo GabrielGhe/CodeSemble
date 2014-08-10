@@ -233,8 +233,15 @@ instanceModelSchema.statics.updateFile = function(inst_id, data){
         var text = model.file.split("\n");
         var line = text[data.from.line];
         var toadd = (data.text === "")? "\n" : data.text;
+
         line = line.slice(0, data.from.ch) + toadd + line.slice(data.from.ch);
         text[data.from.line] = line;
+
+        text = text.join("\n").split("\n");
+        for(var i=0; i < data.lines.length; ++i){
+            text[data.from.line + i] = data.lines[i];
+        }
+
         model.file = text.join("\n");
         model.save(function(e){
             release();

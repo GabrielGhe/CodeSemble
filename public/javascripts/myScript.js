@@ -148,7 +148,7 @@ MyApp.controller("InstanceCTRL", [
 
             _editor.on("change", function(cm, change) {
                 var func = $scope.sendEvents[change.origin];
-                if (func) func(change);
+                if (func) func(change, cm);
             });
 
             _editor.on("cursorActivity", function(cm) {

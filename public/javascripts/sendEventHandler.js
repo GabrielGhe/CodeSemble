@@ -48,7 +48,11 @@ function SendEventHandler(scope, Faye){
         Faye.publish("/" + myScope.instanceId, JSON.stringify(obj));
     };
 
-    this["+input"] = function(change){
+    this["+input"] = function(change, cm){
+        var lines = [];
+        for(var i = 0; i < change.text.length; ++i){
+            lines.push(cm.getLine(change.from.line + i));
+        }
         var obj = {
             type: "+input",
             author: myScope.name,
@@ -61,7 +65,8 @@ function SendEventHandler(scope, Faye){
                 ch: change.to.ch,
                 line: change.to.line
             },
-            text: change.text.join("\n")
+            text: change.text.join("\n"),
+            lines: lines
         };
         Faye.publish("/" + myScope.instanceId, JSON.stringify(obj));
     };

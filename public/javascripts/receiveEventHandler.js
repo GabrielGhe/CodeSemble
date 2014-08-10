@@ -7,6 +7,7 @@ function ReceiveEventHandler(scope){
 
     this.addToEditor = function(obj){
         if(obj.color !== myScope.color){
+            
             myScope._editor.replaceRange(obj.text,{
                 line: obj.from.line,
                 ch: obj.from.ch
@@ -14,6 +15,10 @@ function ReceiveEventHandler(scope){
                 line: obj.to.line,
                 ch: obj.to.ch
             });
+            
+            for(var i = 0; i < obj.lines.length; ++i){
+                myScope._editor.setLine(obj.from.line + i, obj.lines[i]);
+            }
         }
     };
 
