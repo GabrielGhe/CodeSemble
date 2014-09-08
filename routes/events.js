@@ -23,8 +23,11 @@ exports.setup = function(bay) {
 		    		if(pos > -1){
 		    			InstanceModel.updateDateInstance(message.channel);
 		    		}
+                    //One of the update file methods
                     if(pos > 0){
+                        //call function to update file       
                         var func = InstanceModel.updateFile(message.channel, data);
+                        if(func) func(message.channel, data);
                     }
 		    	}
 		    }finally{
