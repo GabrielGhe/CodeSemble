@@ -230,28 +230,30 @@ instanceModelSchema.statics.updateFile = function(inst_id, data){
     var obj = {};
 
     function addText(data, model, release){
-        var text = model.file.split("\n");
-        var line = text[data.from.line];
-        var toadd = (data.text === "")? "\n" : data.text;
+        try {
+            var text = model.file.split("\n");
+            var line = text[data.from.line];
+            var toadd = (data.text === "")? "\n" : data.text;
 
-        line = line.slice(0, data.from.ch) + toadd + line.slice(data.from.ch);
-        text[data.from.line] = line;
+            line = line.slice(0, data.from.ch) + toadd + line.slice(data.from.ch);
+            text[data.from.line] = line;
 
-        text = text.join("\n").split("\n");
-        for(var i=0; i < data.lines.length; ++i){
-            text[data.from.line + i] = data.lines[i];
-        }
+            text = text.join("\n").split("\n");
+            for(var i=0; i < data.lines.length; ++i){
+                text[data.from.line + i] = data.lines[i];
+            }
 
-        model.file = text.join("\n");
-        model.save(function(e){
+            model.file = text.join("\n");
+            model.save(function(e){
+                release();
+            });
+        } catch(e) {
+            console.log("Error happened",e);
             release();
-        });
+        }
     }
 
     function removeText(data, model, release){
-        var text = model.file;
-        var lines = text.split("\n");
-        
         function removeLinesInBetween(lines, start, end){
             var removed = 0;
             for(var i=end-1; i > start; --i){
@@ -269,23 +271,31 @@ instanceModelSchema.statics.updateFile = function(inst_id, data){
             return s.substring(0, start) + substitute + s.substring(end);
         }
 
-        var newLines = removeLinesInBetween(lines, data.from.line, data.to.line);
-        lines = newLines.lines;
-        data.to.line -= newLines.removed;
+        try {
+            var text = model.file;
+            var lines = text.split("\n");
 
-        //same line
-        if (data.from.line === data.to.line){
-            lines[data.from.line] = replaceRange(lines[data.from.line], data.from.ch, data.to.ch, "");
-        } else {
-            //diff line
-            lines[data.from.line] = lines[data.from.line].substring(0, data.from.ch) + lines[data.to.line].substring(data.to.ch);
-            lines.splice(data.to.line, 1);
-        }
+            var newLines = removeLinesInBetween(lines, data.from.line, data.to.line);
+            lines = newLines.lines;
+            data.to.line -= newLines.removed;
 
-        model.file = lines.join("\n");
-        model.save(function(e){
+            //same line
+            if (data.from.line === data.to.line){
+                lines[data.from.line] = replaceRange(lines[data.from.line], data.from.ch, data.to.ch, "");
+            } else {
+                //diff line
+                lines[data.from.line] = lines[data.from.line].substring(0, data.from.ch) + lines[data.to.line].substring(data.to.ch);
+                lines.splice(data.to.line, 1);
+            }
+
+            model.file = lines.join("\n");
+            model.save(function(e){
+                release();
+            });
+        } catch(e) {
+            console.log("Error happened",e);
             release();
-        });
+        }
     }
 
     //CUT
@@ -298,11 +308,11 @@ instanceModelSchema.statics.updateFile = function(inst_id, data){
     };
     //PASTE
     obj.paste = function(data, model, release){
-        addText(data,model, release);
+        addText(data, model, release);
     };
     //ADD
     obj["+input"] = function(data, model, release){
-        addText(data,model, release);
+        addText(data, model, release);
     };
 
     Model.findOne({
