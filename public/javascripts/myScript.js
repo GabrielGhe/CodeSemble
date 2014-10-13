@@ -123,11 +123,13 @@ MyApp.controller("InstanceCTRL", [
             {name: "JavaScript", mode: "javascript"},
             {name: "Go", mode: "go"},
             {name: "SQL", mode: "sql"},
-            {name: "PHP", mode: "php"},
             {name: "Python", mode: "python"},
-            {name: "HTML", mode: "html"},
             {name: "Ruby", mode: "ruby"},
-            {name: "Shell", mode: "shell"}
+            {name: "Shell", mode: "shell"},
+            {name: "Java", mode: "text/x-java"},
+            {name: "C++", mode: "text/x-c++src"},
+            {name: "C", mode: "text/x-csrc"},
+            {name: "C#", mode: "text/x-csharp"}
         ];
 
         //Codemirror properties
