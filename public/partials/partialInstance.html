@@ -6,6 +6,14 @@
 </div>
 <!-- END content -->
 
+
+<!-- Selected Language -->
+<input type="text" ng-model="selectedLanguage" class="language form-control" data-min-length=0
+	typeahead="language.name for language in languages | filter:$viewValue | limitTo:8"
+	class="form-control" typeahead-editable="false" typeahead-on-select="onSelect($item, $model, $label)">
+
+
+
 <!-- side -->
 <div id="side">
 
@@ -42,10 +50,8 @@
 		</ul>
 		<!-- chat input -->
 		<input id="side-chat-input" ng-model="messageText" ng-keyup="messageEvent($event)" placeholder="Send Message" class="form-control"/>
-
 	</div>
 	<!-- END chat -->
-
 </div>
 <!-- END side -->
 
@@ -53,7 +59,7 @@
 <script type="text/ng-template" id="modal.html">
 	<!-- Header -->
 	<div class="modal-header">
-	    <h3>Welcome to CodeSemble</h3>
+		<h3>Welcome to CodeSemble</h3>
 	</div>
 	<!-- Body -->
 	<div class="modal-body">

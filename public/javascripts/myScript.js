@@ -1,7 +1,7 @@
 "use strict";
 
 //http://cdnjs.com/libraries/codemirror
-var MyApp = angular.module("MyApp", ["ngRoute", "ngAnimate", "ui.bootstrap", "ui.codemirror", "luegg.directives", "angucomplete"]);
+var MyApp = angular.module("MyApp", ["ngRoute", "ngAnimate", "ui.bootstrap", "ui.codemirror", "luegg.directives"]);
 
 //Routing Configuration 
 MyApp.config(["$routeProvider", "$locationProvider",
@@ -110,27 +110,25 @@ MyApp.directive("usercursor", ["CodeMirrorEditor",
     }
 ]);
 
-//Codemirror languages
-MyApp.constant("Language", {
-    javascript: "javascript",
-    html: "html",
-    go: "go",
-    sql: "sql",
-    php: "php",
-    python: "python",
-    ruby: "ruby",
-    shell: "shell"
-});
-
 /* ###############################################################################
  * ##
  * ##                           InstanceCRTL
  * ##
  * ############################################################################### */
 MyApp.controller("InstanceCTRL", [
-    "$scope", "$routeParams", "Faye", "$sce", "Language", "$modal", "CodeMirrorEditor", "$timeout",
-    function($scope, $routeParams, Faye, $sce, Language, $modal, CodeMirrorEditor, $timeout) {
+    "$scope", "$routeParams", "Faye", "$sce", "$modal", "CodeMirrorEditor", "$timeout",
+    function($scope, $routeParams, Faye, $sce, $modal, CodeMirrorEditor, $timeout) {
 
+        $scope.languages = [
+            {name: "JavaScript", mode: "javascript"},
+            {name: "Go", mode: "go"},
+            {name: "SQL", mode: "sql"},
+            {name: "PHP", mode: "php"},
+            {name: "Python", mode: "python"},
+            {name: "HTML", mode: "html"},
+            {name: "Ruby", mode: "ruby"},
+            {name: "Shell", mode: "shell"}
+        ];
 
         //Codemirror properties
         $scope.editorOptions = {
@@ -182,10 +180,11 @@ MyApp.controller("InstanceCTRL", [
         };
 
         //Change programming language in editor
-        $scope.changeLanguage = function(lang) {
-            var newLang = Language[lang];
+        $scope.onSelect = function(item, model, label){
+            var newLang = item.mode;
             if (newLang) {
                 $scope.editorOptions.mode = newLang;
+                $scope._editor.setOption("mode", $scope.editorOptions.mode);
             }
         };
 
@@ -253,6 +252,7 @@ MyApp.controller("InstanceCTRL", [
             $scope.color = "";
             $scope.comments = [];
             $scope.users = [];
+            $scope.selectedLanguage = $scope.languages[0];
         };
 
         $scope.fayeLoading = function() {

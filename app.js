@@ -7,6 +7,7 @@ var express = require('express');
 var routes = require('./routes');
 var http = require('http');
 var path = require('path');
+var lessMiddleware = require('less-middleware');
 var InstanceModel = require('./model/instanceModel');
 InstanceModel.removeAllEmpty();
 
@@ -38,6 +39,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
 app.use(app.router);
+app.use(lessMiddleware(__dirname + "/public"));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only

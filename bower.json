@@ -1,7 +1,5 @@
 {
   "name": "CodeSemble",
   "version": "0.0.1",
-  "dependencies": {
-    "angucomplete": "*"
-  }
+  "dependencies": {}
 }
