@@ -188,6 +188,24 @@ MyApp.controller("InstanceCTRL", [
             }
         };
 
+        //Validate language selection
+        $scope.validateSelection = function(){
+            var bad = true;
+            var currentMode;
+            for (var i=0; i < $scope.languages.length; ++i) {
+                if ($scope.languages[i].name == $scope.selectedLanguage) {
+                    bad = false;
+                }
+                if ($scope.languages[i].mode == $scope.editorOptions.mode) {
+                    currentMode = $scope.languages[i].name;
+                }
+            }
+
+            if (bad && currentMode) {
+                $scope.selectedLanguage = currentMode;
+            }
+        };
+
         //Scroll into view line
         $scope.goToLine = function(line) {
             var editor = $scope._editor;
