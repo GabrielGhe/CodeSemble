@@ -203,6 +203,10 @@ MyApp.controller("InstanceCTRL", [
                 }
             }
 
+            if($scope.selectedLanguage != currentMode){
+                bad = true;
+            }
+
             if (bad && currentMode) {
                 $scope.selectedLanguage = currentMode;
             }
