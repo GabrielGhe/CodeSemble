@@ -77,7 +77,10 @@ instanceModelSchema.statics.getUsers = function(inst_id, res) {
         var users = [];
         if (!err && obj) {
             users = obj.users.map(function(el) {
-                return ColorMaker.makeRGB(el._id);
+                return {
+                    name: el.name,
+                    color: ColorMaker.makeRGB(el._id)
+                };
             });
         }
         res.write(JSON.stringify(users));

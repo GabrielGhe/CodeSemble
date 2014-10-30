@@ -156,6 +156,7 @@ Classes ---------------------------------------
 	position:absolute;
 	bottom:9px;
 	left:10px;
+	cursor:pointer;
 }
 
 .user-icon .label {
@@ -185,6 +186,14 @@ Classes ---------------------------------------
 	height:15px;
 	width:2px;
 	background-color:transparent;
+}
+
+.userCursorName {
+	position:absolute;
+	top:-11px;
+	font-size:75%;
+	padding: 1px 3px;
+	z-index:3;
 }
 
 .form-control {

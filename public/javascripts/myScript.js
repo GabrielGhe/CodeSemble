@@ -92,12 +92,18 @@ MyApp.directive("usercursor", ["CodeMirrorEditor",
 
         return {
             restrict: "E",
+            transclude: true,
+            template: '<div ng-transclude></div>',
             link: function(scope, element, attrs) {
                 element.addClass("userCursor");
                 CodeMirrorEditor.getEditor().addWidget({
                     line: 0,
                     ch: 0
                 }, element[0]);
+
+                scope.$watch(attrs.name, function(name) {
+                    element.html(name);
+                });
 
                 scope.$watch(attrs.x, function(x) {
                     element.css("left", x + "px");
@@ -274,6 +280,7 @@ MyApp.controller("InstanceCTRL", [
             $scope.name = "";
             $scope.instanceId = $routeParams.id;
             $scope.color = "";
+            $scope.showNames = false;
             $scope.comments = [];
             $scope.users = [];
             $scope.selectedLanguage = $scope.languages[0];
@@ -284,9 +291,11 @@ MyApp.controller("InstanceCTRL", [
             Faye.getUsers($scope.instanceId, function(users) {
                 for (var i = 0; i != users.length; ++i) {
                     $scope.users.push({
-                        color: users[i]
+                        name: users[i].name,
+                        color: users[i].color
                     });
                 }
+                console.log("Users", $scope.users);
             });
 
             //Get file
