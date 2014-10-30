@@ -156,6 +156,7 @@ Classes ---------------------------------------
 	position:absolute;
 	bottom:9px;
 	left:10px;
+	cursor:pointer;
 }
 
 .user-icon .label {

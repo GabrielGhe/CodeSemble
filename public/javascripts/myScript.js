@@ -280,6 +280,7 @@ MyApp.controller("InstanceCTRL", [
             $scope.name = "";
             $scope.instanceId = $routeParams.id;
             $scope.color = "";
+            $scope.showNames = false;
             $scope.comments = [];
             $scope.users = [];
             $scope.selectedLanguage = $scope.languages[0];

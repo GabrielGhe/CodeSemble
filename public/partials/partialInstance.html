@@ -3,7 +3,7 @@
 	<div id="editor" ui-codemirror="{ onLoad : codemirrorLoaded}" ui-codemirror-opts="editorOptions"></div>
 	<userCursor ng-repeat="user in users | notme:this track by $index" 
 		x="user.x" y="user.y" ng-style="{ backgroundColor: user.color }">
-			<div class="userCursorName" ng-style='{ backgroundColor: user.color }'>{{user.name}}</div>
+			<div class="userCursorName" ng-show="showNames" ng-style='{ backgroundColor: user.color }'>{{user.name}}</div>
 	</userCursor>
 </div>
 <!-- END content -->
@@ -20,7 +20,7 @@
 	<!-- chat -->
 	<div id="chat-container">
 
-		<div class="user-icon">
+		<div ng-click="showNames = !showNames" class="user-icon">
 			<i class="fa fa-user fa-lg"></i>
 			<span class="label label-success">{{who()}}</span>
 		</div>
