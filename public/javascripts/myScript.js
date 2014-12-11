@@ -191,6 +191,8 @@ MyApp.controller("InstanceCTRL", [
         $scope.onSelect = function(item, model, label){
             var newLang = item.mode;
             if (newLang) {
+                $scope.selectedLanguage = "";
+                $scope.currentLanguage = item.name;
                 $scope.editorOptions.mode = newLang;
                 $scope._editor.setOption("mode", $scope.editorOptions.mode);
             }
@@ -201,6 +203,7 @@ MyApp.controller("InstanceCTRL", [
             var bad = true;
             var currentMode;
             for (var i=0; i < $scope.languages.length; ++i) {
+                // what was written is a possible value
                 if ($scope.languages[i].name == $scope.selectedLanguage) {
                     bad = false;
                 }
@@ -214,7 +217,8 @@ MyApp.controller("InstanceCTRL", [
             }
 
             if (bad && currentMode) {
-                $scope.selectedLanguage = currentMode;
+                $scope.selectedLanguage = "";
+                $scope.currentLanguage = currentMode;
             }
         };
 
@@ -283,7 +287,8 @@ MyApp.controller("InstanceCTRL", [
             $scope.showNames = false;
             $scope.comments = [];
             $scope.users = [];
-            $scope.selectedLanguage = $scope.languages[0];
+            $scope.selectedLanguage = "";
+            $scope.currentLanguage = $scope.languages[0].name;
         };
 
         $scope.fayeLoading = function() {

@@ -10,8 +10,8 @@
 
 
 <!-- Selected Language -->
-<input type="text" ng-model="selectedLanguage" class="language form-control" data-min-length=0
-	typeahead="language.name for language in languages | filter:$viewValue"
+<input type="text" ng-model="selectedLanguage" class="language form-control" data-min-length=3
+	typeahead="language.name for language in languages | filter:$viewValue" placeholder="{{currentLanguage}}"
 	class="form-control" ng-blur="validateSelection()" typeahead-on-select="onSelect($item, $model, $label)">
 
 <!-- side -->

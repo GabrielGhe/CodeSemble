@@ -1,6 +1,12 @@
 @languageColor: #d0d0d0;
 @selectedLanguageColor: #7b8a8b;
 @sideColor: #F1F1F1;
+@activeColor: #8D8E88;
+@typeaheadMatchColor: #272822;
+
+strong {
+  color:@typeaheadMatchColor;
+}
 
 .language {
   position:fixed;
@@ -28,9 +34,13 @@
 .dropdown-menu>.active>a,
 .dropdown-menu>.active>a:hover,
 .dropdown-menu>.active>a:focus {
-  background-color: #18bc9c;
+  cursor:pointer;
+  background-color: @activeColor;
 }
-
 .dropdown-menu {
   min-width: 150px;
+
+  &>.active>a>strong {
+    color: @typeaheadMatchColor;
+  }
 }
