@@ -263,9 +263,12 @@ MyApp.controller("InstanceCTRL", [
                 var deltaY = e.y - $scope.users[i].y;
                 var diff = Math.pow(deltaX, 2) + Math.pow(deltaY, 2);
                 diff = parseInt(Math.sqrt(diff));
-                if (diff <= 100) {
+
+                // if the diff is less than 100 and show is false
+                if (diff <= 100 && !$scope.users[i].show) {
                     $scope.users[i].show = true;
-                } else {
+                // if the diff is more than 100 and show is true
+                } else if(diff > 100 && $scope.users[i].show) {
                     $scope.users[i].show = false;
                 }
             }
