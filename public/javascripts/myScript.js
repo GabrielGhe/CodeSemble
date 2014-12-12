@@ -86,6 +86,7 @@ MyApp.filter("notme", function() {
     }
 });
 
+
 MyApp.directive("usercursor", ["CodeMirrorEditor",
     function(CodeMirrorEditor) {
         var editor = CodeMirrorEditor;
@@ -123,7 +124,7 @@ MyApp.directive("usercursor", ["CodeMirrorEditor",
  * ############################################################################### */
 MyApp.controller("InstanceCTRL", [
     "$scope", "$routeParams", "Faye", "$sce", "$modal", "CodeMirrorEditor", "$timeout",
-    function($scope, $routeParams, Faye, $sce, $modal, CodeMirrorEditor, $timeout) {
+    function($scope, $routeParams, Faye, $sce, $modal, CodeMirrorEditor, $timeoutg) {
 
         $scope.languages = [
             {name: "JavaScript", mode: "javascript"},
@@ -191,7 +192,7 @@ MyApp.controller("InstanceCTRL", [
         $scope.onSelect = function(item, model, label){
             var newLang = item.mode;
             if (newLang) {
-                $scope.selectedLanguage = "";
+                $scope.selectedLanguage = '';g
                 $scope.currentLanguage = item.name;
                 $scope.editorOptions.mode = newLang;
                 $scope._editor.setOption("mode", $scope.editorOptions.mode);
@@ -217,7 +218,6 @@ MyApp.controller("InstanceCTRL", [
             }
 
             if (bad && currentMode) {
-                $scope.selectedLanguage = "";
                 $scope.currentLanguage = currentMode;
             }
         };
@@ -244,6 +244,7 @@ MyApp.controller("InstanceCTRL", [
             }
         };
 
+        //removes user from users array
         $scope.removeUser = function(obj, cb) {
             for (var i = 0; i != $scope.users.length; ++i) {
                 var colorAtI = $scope.users[i].color;
@@ -251,6 +252,21 @@ MyApp.controller("InstanceCTRL", [
                     var whoLeft = $scope.users.splice(i, 1);
                     cb(whoLeft[0]);
                     break;
+                }
+            }
+        };
+
+        //keeps track of mouse position
+        $scope.mouseMoved = function(e) {
+            for(var i = 0; i < $scope.users.length; ++i) {
+                var deltaX = e.x - $scope.users[i].x;
+                var deltaY = e.y - $scope.users[i].y;
+                var diff = Math.pow(deltaX, 2) + Math.pow(deltaY, 2);
+                diff = parseInt(Math.sqrt(diff));
+                if (diff <= 100) {
+                    $scope.users[i].show = true;
+                } else {
+                    $scope.users[i].show = false;
                 }
             }
         };
@@ -284,7 +300,6 @@ MyApp.controller("InstanceCTRL", [
             $scope.name = "";
             $scope.instanceId = $routeParams.id;
             $scope.color = "";
-            $scope.showNames = false;
             $scope.comments = [];
             $scope.users = [];
             $scope.selectedLanguage = "";
@@ -300,7 +315,6 @@ MyApp.controller("InstanceCTRL", [
                         color: users[i].color
                     });
                 }
-                console.log("Users", $scope.users);
             });
 
             //Get file

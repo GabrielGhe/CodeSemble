@@ -65,7 +65,7 @@ function ReceiveEventHandler(scope){
         obj.text = (firstTime)? "Welcome " + myScope.name : obj.name + " has entered the room";
         firstTime = false;
         myScope.addChatMessage(obj);
-        myScope.addUser({ name:obj.name, color:obj.color});
+        myScope.addUser({ name:obj.name, color:obj.color, show:false });
     };
 
     this.scrollIntoView = function(obj){

@@ -1,18 +1,18 @@
 <!-- content -->
-<div id="content">
+<div id="content" ng-mousemove="mouseMoved($event)">
 	<div id="editor" ui-codemirror="{ onLoad : codemirrorLoaded}" ui-codemirror-opts="editorOptions"></div>
 	<userCursor ng-repeat="user in users | notme:this track by $index" 
 		x="user.x" y="user.y" ng-style="{ backgroundColor: user.color }">
-			<div class="userCursorName" ng-show="showNames" ng-style='{ backgroundColor: user.color }'>{{user.name}}</div>
+			<div class="userCursorName" ng-show="user.show" ng-style='{ backgroundColor: user.color }'>{{user.name}}</div>
 	</userCursor>
 </div>
 <!-- END content -->
 
 
 <!-- Selected Language -->
-<input type="text" ng-model="selectedLanguage" class="language form-control" data-min-length=0
+<input type="text" ng-model="selectedLanguage" class="language form-control" data-min-length="0"
 	typeahead="language.name for language in languages | filter:$viewValue" placeholder="{{currentLanguage}}"
-	class="form-control" ng-blur="validateSelection()" typeahead-on-select="onSelect($item, $model, $label)">
+	ng-blur="validateSelection()" typeahead-on-select="onSelect($item, $model, $label)">
 
 <!-- side -->
 <div id="side">
@@ -20,7 +20,7 @@
 	<!-- chat -->
 	<div id="chat-container">
 
-		<div ng-click="showNames = !showNames" class="user-icon">
+		<div class="user-icon">
 			<i class="fa fa-user fa-lg"></i>
 			<span class="label label-success">{{who()}}</span>
 		</div>
