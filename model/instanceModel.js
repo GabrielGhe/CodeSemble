@@ -16,6 +16,7 @@ var instanceModelSchema = mongoose.Schema({
     created: Number
 });
 
+//changeLanguage
 //createSingleInstance
 //getInstance
 //getUsers
@@ -99,8 +100,8 @@ instanceModelSchema.statics.getFile = function(inst_id, res) {
         '_id': inst_id
     }, function(err, obj) {
         if (!err && obj) {
-            var file = obj.file;
-            if(file){
+            var file = obj.file || '\n\n';
+            if (file) {
                 res.write(JSON.stringify(file));
             }
             res.end();

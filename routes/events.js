@@ -3,7 +3,7 @@
 var InstanceModel = require('../model/instanceModel');
 var ColorMaker = require('../utils/colorMaker');
 var Q = require('q');
-var eventList = ['sendMessage', 'cut', 'paste', '+delete', '+input'];
+var eventList = ['sendMessage', 'changeLanguage', 'cut', 'paste', '+delete', '+input'];
 
 /**
  * Setting up the bayeux events
@@ -15,19 +15,23 @@ exports.setup = function(bay) {
         incoming: function(message, callback) {
 		    try{
 		    	if(message.channel.indexOf('/meta') === -1){
+                    // Parse the payload
 		    		var data = JSON.parse(message.data);
 		    		if(data['type'] === 'postsubscribe'){
 		    			InstanceModel.setSingleUserName(message.clientId, message.channel, data['name']);
 		    		}
                     var pos = eventList.indexOf(data['type']);
+
+                    // Update instance time
 		    		if(pos > -1){
 		    			InstanceModel.updateDateInstance(message.channel);
 		    		}
+
                     //One of the update file methods
-                    if(pos > 0){
+                    if(pos >= eventList.indexOf('cut')){
                         //call function to update file       
                         var func = InstanceModel.updateFile(message.channel, data);
-                        if(func) func(message.channel, data);
+                        if (func) func(message.channel, data);
                     }
 		    	}
 		    }finally{

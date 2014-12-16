@@ -4,6 +4,16 @@ function SendEventHandler(scope, Faye){
     var myScope = scope;
     var myFaye = Faye;
 
+    this.changeLanguage = function(lang){
+        var obj = {
+            type: "changeLanguage",
+            author: myScope.name,
+            color: myScope.color,
+            language: lang
+        };
+        Faye.publish("/" + myScope.instanceId, JSON.stringify(obj));
+    };
+
     this.cursorActivity = function(pos){
         var obj = {
             type: "cursorActivity",

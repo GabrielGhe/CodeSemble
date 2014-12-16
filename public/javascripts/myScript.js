@@ -86,7 +86,6 @@ MyApp.filter("notme", function() {
     }
 });
 
-
 MyApp.directive("usercursor", ["CodeMirrorEditor",
     function(CodeMirrorEditor) {
         var editor = CodeMirrorEditor;
@@ -189,13 +188,18 @@ MyApp.controller("InstanceCTRL", [
         };
 
         //Change programming language in editor
-        $scope.onSelect = function(item, model, label){
+        $scope.onSelect = function(item, receive){
             var newLang = item.mode;
             if (newLang) {
-                $scope.selectedLanguage = '';g
+                // clear value inside inputbox
+                $scope.selectedLanguage = '';
                 $scope.currentLanguage = item.name;
                 $scope.editorOptions.mode = newLang;
                 $scope._editor.setOption("mode", $scope.editorOptions.mode);
+
+                // change language for everyone
+                var func = $scope.sendEvents["changeLanguage"];
+                if (func && !receive) func(item);
             }
         };
 
@@ -321,8 +325,8 @@ MyApp.controller("InstanceCTRL", [
             });
 
             //Get file
-            Faye.getFile($scope.instanceId, function(file) {
-                $scope._editor.setValue(JSON.parse(file));
+            Faye.getFile($scope.instanceId, function(payload) {
+                $scope._editor.setValue(JSON.parse(payload));
             });
 
             // Listen to data coming from the server via Faye

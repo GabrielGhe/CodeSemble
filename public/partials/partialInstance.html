@@ -10,9 +10,10 @@
 
 
 <!-- Selected Language -->
-<input type="text" ng-model="selectedLanguage" class="language form-control" data-min-length="0"
-	typeahead="language.name for language in languages | filter:$viewValue" placeholder="{{currentLanguage}}"
-	ng-blur="validateSelection()" typeahead-on-select="onSelect($item, $model, $label)">
+<input id='languageAutocomplete' type="text" class="language form-control" placeholder="{{currentLanguage}}"
+	ng-model="selectedLanguage" data-min-length="0" ng-blur="validateSelection()"
+	typeahead="language.name for language in languages | filter:$viewValue"
+	typeahead-on-select="onSelect($item)">
 
 <!-- side -->
 <div id="side">

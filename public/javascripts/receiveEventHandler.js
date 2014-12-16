@@ -22,6 +22,14 @@ function ReceiveEventHandler(scope){
         }
     };
 
+    this.changeLanguage = function(obj){
+        if (obj.language && obj.language.mode && obj.language.name) {
+            myScope.onSelect(obj.language, true);
+            obj.text = obj.author + " has changed the language to " + obj.language.name;
+            myScope.addChatMessage(obj);
+        }
+    };
+
     this.cursorActivity = function(obj){
         for(var i=0; i !== myScope.users.length; ++i){
             if(myScope.users[i].color === obj.color){
