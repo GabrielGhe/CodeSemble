@@ -15,10 +15,6 @@ function ReceiveEventHandler(scope){
                 line: obj.to.line,
                 ch: obj.to.ch
             });
-            
-            for(var i = 0; i < obj.lines.length; ++i){
-                myScope._editor.setLine(obj.from.line + i, obj.lines[i]);
-            }
         }
     };
 
@@ -34,6 +30,11 @@ function ReceiveEventHandler(scope){
         for(var i=0; i !== myScope.users.length; ++i){
             if(myScope.users[i].color === obj.color){
                 myScope.$apply(function(){
+                    // selection
+                    myScope.users[i].startsel = obj.startSel;
+                    myScope.users[i].endsel = obj.endSel;
+
+                    // cursor
                     myScope.users[i].x = obj.x;
                     myScope.users[i].y = obj.y;
                 });

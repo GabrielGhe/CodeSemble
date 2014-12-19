@@ -19,7 +19,9 @@ function SendEventHandler(scope, Faye){
             type: "cursorActivity",
             y: pos.top,
             x: pos.left,
-            color: pos.color
+            color: pos.color,
+            startSel: pos.startSel,
+            endSel: pos.endSel
         };
         Faye.publish('/' + myScope.instanceId, JSON.stringify(obj));
     };

@@ -88,7 +88,10 @@ MyApp.filter("notme", function() {
 
 MyApp.directive("usercursor", ["CodeMirrorEditor",
     function(CodeMirrorEditor) {
-        var editor = CodeMirrorEditor;
+        var sSel
+          , eSel
+          , selection
+          , myColor;
 
         return {
             restrict: "E",
@@ -96,15 +99,36 @@ MyApp.directive("usercursor", ["CodeMirrorEditor",
             template: '<div ng-transclude></div>',
             link: function(scope, element, attrs) {
                 element.addClass("userCursor");
+                myColor = scope.$eval(attrs.color);
                 CodeMirrorEditor.getEditor().addWidget({
                     line: 0,
                     ch: 0
                 }, element[0]);
-
                 scope.$watch(attrs.name, function(name) {
                     element.html(name);
                 });
+                
+                //Selection
+                scope.$watch(attrs.startsel, function(startsel) {
+                    sSel = startsel;
+                    if (selection) selection.clear();
+                    if (eSel && !angular.equals(sSel, eSel)) {
+                        selection = CodeMirrorEditor
+                                    .getEditor()
+                                    .markText(sSel,eSel, { css: "background-color:" + myColor + ";" });
+                    }
+                }, true);
+                scope.$watch(attrs.endsel, function(endsel) {
+                    eSel = endsel;
+                    if (selection) selection.clear();
+                    if (sSel && !angular.equals(sSel, eSel)) {
+                        selection = CodeMirrorEditor
+                                    .getEditor()
+                                    .markText(sSel,eSel, { css: "background-color:" + myColor + ";" });
+                    }
+                }, true);
 
+                // Cursor position
                 scope.$watch(attrs.x, function(x) {
                     element.css("left", x + "px");
                 });
@@ -160,11 +184,13 @@ MyApp.controller("InstanceCTRL", [
             _editor.on("cursorActivity", function(cm) {
                 if($scope.sel) $scope.sel.clear();
                 var coor = cm.cursorCoords(false, "local");
-                var x = cm.getCursor(true);
-                var y = cm.getCursor(false);
-                $scope.sel = cm.markText(x,y, { css: "background-color:" + $scope.color + ";" });
 
+                // Added selection and color
+                coor.startSel = cm.getCursor(true);
+                coor.endSel = cm.getCursor(false);
                 coor.color = $scope.color;
+
+                // Broadcast
                 var func = $scope.sendEvents["cursorActivity"];
                 if (func) func(coor);
             });
