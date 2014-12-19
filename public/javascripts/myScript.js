@@ -123,7 +123,7 @@ MyApp.directive("usercursor", ["CodeMirrorEditor",
  * ############################################################################### */
 MyApp.controller("InstanceCTRL", [
     "$scope", "$routeParams", "Faye", "$sce", "$modal", "CodeMirrorEditor", "$timeout",
-    function($scope, $routeParams, Faye, $sce, $modal, CodeMirrorEditor, $timeoutg) {
+    function($scope, $routeParams, Faye, $sce, $modal, CodeMirrorEditor, $timeout) {
 
         $scope.languages = [
             {name: "JavaScript", mode: "javascript"},
@@ -158,8 +158,13 @@ MyApp.controller("InstanceCTRL", [
             });
 
             _editor.on("cursorActivity", function(cm) {
+                if($scope.sel) $scope.sel.clear();
                 var coor = cm.cursorCoords(false, "local");
-                coor["color"] = $scope.color;
+                var x = cm.getCursor(true);
+                var y = cm.getCursor(false);
+                $scope.sel = cm.markText(x,y, { css: "background-color:" + $scope.color + ";" });
+
+                coor.color = $scope.color;
                 var func = $scope.sendEvents["cursorActivity"];
                 if (func) func(coor);
             });
