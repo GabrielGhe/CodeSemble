@@ -2,12 +2,16 @@ var InstanceModel = require('../model/instanceModel');
 
 //Get Home
 exports.index = function(req, res){
-    InstanceModel.createSingleInstance(res);
+  res.render('index', null);
+};
+
+exports.instance = function(req, res){
+  InstanceModel.createSingleInstance(res);
 };
 
 //Get 404
 exports.pageNotFound = function(req, res){
-    res.send(404);
+  res.send(404);
 };
 
 //GET instance
@@ -26,5 +30,5 @@ exports.getUsers = function(req, res){
 };
 
 exports.getFile = function(req, res){
-    InstanceModel.getFile(req.params.id, res);
+  InstanceModel.getFile(req.params.id, res);
 };
