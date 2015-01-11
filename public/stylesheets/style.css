@@ -85,7 +85,7 @@ IDs --------------------------------------------
 	overflow-y:scroll;
 }
 
-#chat-container {
+#chat-container, #users-container {
 	display:block;
 	float:left;
 	position:relative;
@@ -101,7 +101,7 @@ IDs --------------------------------------------
 	padding-right:5px;
 }
 
-#side-chat-messages {
+#side-chat-messages, #side-users {
 	float:left;
 	height:-webkit-calc(100% - 43px);
 	height:-moz-calc(100% - 43px);
@@ -114,7 +114,7 @@ IDs --------------------------------------------
 Classes ---------------------------------------
 */
 
-.message {
+.message, .side-user {
 	padding: 13px 16px 13px 16px;
 	border-bottom: 1px solid lightgray;
 }
@@ -152,7 +152,7 @@ Classes ---------------------------------------
 	background-color:#e0e0e0;
 }
 
-.user-icon {
+.user-icon, .chat-icon {
 	position:absolute;
 	bottom:9px;
 	left:10px;

@@ -344,6 +344,7 @@ MyApp.controller("InstanceCTRL", [
 
             //Initialize objects
             $scope.name = "";
+            $scope.showChat = true;
             $scope.instanceId = $routeParams.id;
             $scope.color = "";
             $scope.comments = [];

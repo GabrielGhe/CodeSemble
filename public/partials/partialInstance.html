@@ -29,9 +29,9 @@
 <div id="side">
 
 	<!-- chat -->
-	<div id="chat-container">
+	<div id="chat-container" ng-show="showChat">
 
-		<div class="user-icon">
+		<div class="user-icon" ng-click="showChat = !showChat">
 			<i class="fa fa-user fa-lg"></i>
 			<span class="label label-success">{{who()}}</span>
 		</div>
@@ -63,6 +63,20 @@
 		<input id="side-chat-input" ng-model="messageText" ng-keyup="messageEvent($event)" placeholder="Send Message" class="form-control"/>
 	</div>
 	<!-- END chat -->
+
+	<!-- users -->
+	<div id="users-container" ng-show="!showChat">
+		<ul id="side-users">
+			<li class="message" ng-repeat="user in users track by $index">
+				<span class="userBlock" ng-style="{ backgroundColor: user.color}" > </span>
+				<span>{{user.name}}</span>
+			</li>
+		</ul>
+
+		<i class="fa fa-list-ul fa-lg chat-icon" ng-click="showChat = !showChat"></i>
+	</div>
+	<!-- END users -->
+
 </div>
 <!-- END side -->
 
