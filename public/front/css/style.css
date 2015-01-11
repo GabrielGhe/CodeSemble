@@ -152,6 +152,9 @@ em {
 .g {
 	margin-top:-25px;
 }
+.g-color {
+	color:#18bc9c !important;
+}
 .muted {
 	color: #A5A5A2;
 	font-family: 'Quattrocento', serif;
