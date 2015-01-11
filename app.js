@@ -53,10 +53,10 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/new', routes.instance);
 app.get('/:id', routes.getInstancePath);
+app.get('/404', routes.pageNotFound);
 app.get('/message', routes.message);
 app.get('/:id/users', routes.getUsers);
 app.get('/:id/file', routes.getFile);
-app.get('/404', routes.pageNotFound);
 
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

@@ -1,3 +1,5 @@
+@import "../lib/stylesheets/bootstrap-responsive.css";
+
 @languageColor: #d0d0d0;
 @selectedLanguageColor: #7b8a8b;
 @sideColor: #F1F1F1;
@@ -96,7 +98,10 @@ small {
             transform: scale(1.2);
   }
 }
-@media (min-width: @screen-xs-min) and (max-width: @screen-xs-max) {
+@media only screen and (max-device-width: @screen-xs-max) {
+  body {
+    zoom:3;
+  }
   #content {
     width: 100%;
   }
@@ -108,23 +113,8 @@ small {
   .language {
     right: 0px;
   }
-}
-@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-  #content {
-    width: 100%;
+
+  .modal-dialog {
+    width:auto;
   }
-
-  #side {
-    display:none;
-  }
-
-  .language {
-    right: 0px;
-  }
-}
-@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-
-}
-@media (min-width: @screen-lg-min) {
-
 }
