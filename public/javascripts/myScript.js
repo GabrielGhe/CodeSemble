@@ -113,10 +113,6 @@ MyApp.directive("usercursor", ["CodeMirrorEditor",
                     sSel = startsel;
                     if (selection) selection.clear();
                     if (eSel && !angular.equals(sSel, eSel)) {
-                        console.log("in Start");
-                        console.log("\tstart", sSel);
-                        console.log("\tend", eSel);
-
                         selection = CodeMirrorEditor
                                     .getEditor()
                                     .markText(sSel,eSel, { css: "background-color:" + myColor + ";" });
@@ -126,10 +122,6 @@ MyApp.directive("usercursor", ["CodeMirrorEditor",
                     eSel = endsel;
                     if (selection) selection.clear();
                     if (sSel && !angular.equals(sSel, eSel)) {
-                        console.log("in End");
-                        console.log("\tstart", sSel);
-                        console.log("\tend", eSel);
-
                         selection = CodeMirrorEditor
                                     .getEditor()
                                     .markText(sSel,eSel, { css: "background-color:" + myColor + ";" });
@@ -393,6 +385,7 @@ MyApp.controller("InstanceCTRL", [
             modalInstance.result.then(function(username) {
                 $scope.name = username;
                 $scope.fayeLoading();
+                $scope._editor.focus();
             });
         };
 

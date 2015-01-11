@@ -6,8 +6,7 @@ function ReceiveEventHandler(scope){
     var self = this;
 
     this.addToEditor = function(obj){
-        if(obj.color !== myScope.color){
-            
+        if (obj.color !== myScope.color) {
             myScope._editor.replaceRange(obj.text,{
                 line: obj.from.line,
                 ch: obj.from.ch
@@ -72,9 +71,11 @@ function ReceiveEventHandler(scope){
 
     this.postsubscribe = function(obj){
         obj.text = (firstTime)? "Welcome " + myScope.name : obj.name + " has entered the room";
+        if (!firstTime) {
+            myScope.addUser({ name:obj.name, color:obj.color, show:false });
+        }
         firstTime = false;
         myScope.addChatMessage(obj);
-        myScope.addUser({ name:obj.name, color:obj.color, show:false });
     };
 
     this.scrollIntoView = function(obj){

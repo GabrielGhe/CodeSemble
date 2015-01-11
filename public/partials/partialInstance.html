@@ -27,56 +27,60 @@
 
 <!-- side -->
 <div id="side">
+	<div class="flip" ng-class="{ flipped: !showChat}">
+		<!-- chat -->
+		<div id="chat-container">
 
-	<!-- chat -->
-	<div id="chat-container" ng-show="showChat">
+			<div class="user-icon" ng-click="showChat = !showChat">
+				<i class="fa fa-user fa-2x"></i>
+				<span class="label label-success">{{who()}}</span>
+			</div>
 
-		<div class="user-icon" ng-click="showChat = !showChat">
-			<i class="fa fa-user fa-lg"></i>
-			<span class="label label-success">{{who()}}</span>
+			<!-- chat messages -->
+			<ul id="side-chat-messages" scroll-glue>
+				<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" 
+				ng-switch on="comment.type" ng-style="comment.color">
+
+					<div ng-switch-default>
+						<span class="userBlock" ng-style="{ backgroundColor: comment.color}" > </span>
+						<span ng-bind-html="to_trusted(comment.text)">?</span>
+					</div>
+
+					<div ng-switch-when="sendMessage">
+						<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
+						<span><b>{{comment.author}}</b> : </span>
+						<span ng-bind-html="to_trusted(comment.text)">?</span>
+					</div>
+
+					<div ng-switch-when="scrollIntoView">
+						<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
+						<span><b>{{comment.author}}: </b></span>
+						<a ng-click="goToLine(comment.line)" ng-bind-html="to_trusted(comment.text)">?</a>
+					</div>
+				</li>
+			</ul>
+			<!-- chat input -->
+			<input id="side-chat-input" ng-model="messageText" ng-keyup="messageEvent($event)" placeholder="Send Message" class="form-control"/>
 		</div>
+		<!-- END chat -->
 
-		<!-- chat messages -->
-		<ul id="side-chat-messages" scroll-glue>
-			<li ng-repeat="comment in comments track by $index" class="message" ng-class="comment.type" 
-			ng-switch on="comment.type" ng-style="comment.color">
+		<!-- users -->
+		<div id="users-container">
+			<ul id="side-users">
+				<li class="message" ng-repeat="user in users track by $index | orderBy:user.name">
+					<span class="userBlock" ng-style="{ backgroundColor: user.color}" > </span>
+					<!-- name -->
+					<span>{{user.name}}</span>
+					<!-- position -->
+					<span><small>is on line</small> {{user.endsel.line + 1}}</span>
+					<span><small> - </small>{{user.endsel.ch}}</span>
+				</li>
+			</ul>
 
-				<div ng-switch-default>
-					<span class="userBlock" ng-style="{ backgroundColor: comment.color}" > </span>
-					<span ng-bind-html="to_trusted(comment.text)">?</span>
-				</div>
-
-				<div ng-switch-when="sendMessage">
-					<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
-					<span><b>{{comment.author}}</b> : </span>
-					<span ng-bind-html="to_trusted(comment.text)">?</span>
-				</div>
-
-				<div ng-switch-when="scrollIntoView">
-					<span class="userBlock" ng-style="{ backgroundColor: comment.color}"> </span>
-					<span><b>{{comment.author}}: </b></span>
-					<a ng-click="goToLine(comment.line)" ng-bind-html="to_trusted(comment.text)">?</a>
-				</div>
-			</li>
-		</ul>
-		<!-- chat input -->
-		<input id="side-chat-input" ng-model="messageText" ng-keyup="messageEvent($event)" placeholder="Send Message" class="form-control"/>
+			<i class="fa fa fa-comment fa-2x chat-icon" ng-click="showChat = !showChat"></i>
+		</div>
+		<!-- END users -->
 	</div>
-	<!-- END chat -->
-
-	<!-- users -->
-	<div id="users-container" ng-show="!showChat">
-		<ul id="side-users">
-			<li class="message" ng-repeat="user in users track by $index">
-				<span class="userBlock" ng-style="{ backgroundColor: user.color}" > </span>
-				<span>{{user.name}}</span>
-			</li>
-		</ul>
-
-		<i class="fa fa-list-ul fa-lg chat-icon" ng-click="showChat = !showChat"></i>
-	</div>
-	<!-- END users -->
-
 </div>
 <!-- END side -->
 

@@ -7,6 +7,9 @@
 strong {
   color:@typeaheadMatchColor;
 }
+small {
+  color:@activeColor;
+}
 
 .language {
   position:fixed;
@@ -38,8 +41,8 @@ strong {
           transition: all 0.5s;
   &:hover {
     color: grey;
-    -webkit-transform: scale(1.5);
-            transform: scale(1.5);
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2);
   }
 }
 
@@ -60,3 +63,22 @@ strong {
 /**
  * Animations
  */
+.flip {
+  position:absolute;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transition: 0.5s;
+  float:left;
+  height:100%;
+  width:100%;
+  &.flipped {
+    -webkit-transform: rotatey(-180deg);
+  }
+}
+
+#chat-container {
+  z-index: 1;
+}
+
+#users-container {
+  -webkit-transform: rotatey(-180deg);
+}
