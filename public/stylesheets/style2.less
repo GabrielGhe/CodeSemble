@@ -11,6 +11,14 @@ small {
   color:@activeColor;
 }
 
+#chat-container {
+  z-index: 1;
+}
+
+#users-container {
+  -webkit-transform: rotatey(-180deg);
+}
+
 .language {
   position:fixed;
   top:10px;
@@ -35,17 +43,6 @@ small {
   }
 }
 
-.user-icon, .chat-icon {
-  cursor: pointer;
-  -webkit-transition: all 0.5s;
-          transition: all 0.5s;
-  &:hover {
-    color: grey;
-    -webkit-transform: scale(1.2);
-            transform: scale(1.2);
-  }
-}
-
 .dropdown-menu>.active>a,
 .dropdown-menu>.active>a:hover,
 .dropdown-menu>.active>a:focus {
@@ -60,9 +57,6 @@ small {
   }
 }
 
-/**
- * Animations
- */
 .flip {
   position:absolute;
   -webkit-transform-style: preserve-3d;
@@ -75,10 +69,21 @@ small {
   }
 }
 
-#chat-container {
-  z-index: 1;
+.side-user {
+  cursor:pointer;
+  &:hover {
+    background-color: lightgray;
+  }
 }
 
-#users-container {
-  -webkit-transform: rotatey(-180deg);
+.user-icon, 
+.chat-icon {
+  cursor: pointer;
+  -webkit-transition: all 0.5s;
+          transition: all 0.5s;
+  &:hover {
+    color: grey;
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+  }
 }

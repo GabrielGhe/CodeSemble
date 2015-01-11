@@ -86,6 +86,22 @@ MyApp.filter("notme", function() {
     }
 });
 
+MyApp.filter("orderByName", function() {
+    return function(input, scope) {
+        function compare(a,b) {
+            var a = a.name.toLowerCase();
+            var b = b.name.toLowerCase();
+            if (a < b)
+                return -1;
+            if (a > b)
+                return 1;
+            return 0;
+        }
+        input.sort(compare);
+        return input;
+    }
+});
+
 MyApp.directive("usercursor", ["CodeMirrorEditor",
     function(CodeMirrorEditor) {
         var sSel
@@ -259,6 +275,7 @@ MyApp.controller("InstanceCTRL", [
 
         //Scroll into view line
         $scope.goToLine = function(line) {
+            if (!line) return;
             var editor = $scope._editor;
             editor.scrollIntoView({
                 line: line,

@@ -67,7 +67,8 @@
 		<!-- users -->
 		<div id="users-container">
 			<ul id="side-users">
-				<li class="message" ng-repeat="user in users track by $index | orderBy:user.name">
+				<li class="side-user" ng-show="users.length == 0">0 users online</li>
+				<li ng-click="goToLine(user.endsel.line)" class="side-user" ng-repeat="user in users | orderByName:this track by $index">
 					<span class="userBlock" ng-style="{ backgroundColor: user.color}" > </span>
 					<!-- name -->
 					<span>{{user.name}}</span>
