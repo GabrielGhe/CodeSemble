@@ -51,6 +51,7 @@ if ('development' == app.get('env')) {
 // routes
 //---------------------------------------------
 app.get('/', routes.index);
+app.get('/new', routes.instance);
 app.get('/404', routes.pageNotFound);
 app.get('/:id', routes.getInstancePath);
 app.get('/message', routes.message);
