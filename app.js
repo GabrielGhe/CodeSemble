@@ -15,7 +15,7 @@ InstanceModel.removeAllEmpty();
 //---------------------------------------------
 var mongoose = require('mongoose');
 if (process.env.NODE_ENV === 'production') {
-    mongoose.connect('mongodb://cmg427:First Heroku App@kahana.mongohq.com:10034/app28150436');
+    mongoose.connect('mongodb://cmg427:12345678@ds129641.mlab.com:29641/heroku_h4p8s2sv');
 } else {
     mongoose.connect('mongodb://localhost/codesemble');
 }
